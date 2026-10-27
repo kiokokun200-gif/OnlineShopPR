@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OnlineShop.Core.DTOs.DB;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,33 @@ namespace OnlineShopPR.Pages
     /// </summary>
     public partial class MainPage : Page
     {
+        private List<ProductDTO> _products;
+        private List<string> sort = new List<string>();
+        private List<string> goodCategories;
+        private string search = "";
+        private string selectedSort;
+        private string selectefFiltr;
         public MainPage()
         {
             InitializeComponent();
+        }
+        private void LoadGoods()
+        {
+            //goods = Core.context.Good.ToList();
+            //ListBoxGoods.ItemsSource = goods;
+        }
+        private void LoadData()
+        {
+
+            sort.Add("Сначала лучшие");
+            sort.Add("Сначала дешевле");
+            sort.Add("Сначала дороже");
+            ComboBoxSort.ItemsSource = sort;
+            goodCategories = Core.context.GoodCategory.Select(u => u.Name).ToList();
+            goodCategories.Insert(0, "Все");
+            ComboBoxFiltr.ItemsSource = goodCategories;
+
+
         }
     }
 }
