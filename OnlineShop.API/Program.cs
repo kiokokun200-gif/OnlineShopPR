@@ -1,19 +1,20 @@
+using dotenv.net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using OnlineShop.API;
 using OnlineShop.API.Models;
 using OnlineShop.API.Services;
 using System.Security.Cryptography;
+DotEnv.Load();
 
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
 builder.Services.Configure<JWTOption>(
     builder.Configuration.GetSection(JWTOption.SectionName));
 
+var jwt = builder.Configuration.GetSection(JWTOption.SectionName).Get<JWTOption>()
+    ?? throw new InvalidOperationException("Error Jwt .env");
 
-var key = new SymmetricSecurityKey(
-    RandomNumberGenerator.GetBytes(32));
 
 var validation = new TokenValidationParameters
 {
@@ -24,7 +25,7 @@ var validation = new TokenValidationParameters
     ValidAudience = "JwtOnlineShopeApi",
 
     ValidateIssuerSigningKey = true,
-    IssuerSigningKey = key,
+    IssuerSigningKey = jwt.GetSymmetricSecurityKey(),
 
     NameClaimType = "name",
     RoleClaimType = "role"
@@ -51,5 +52,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 // Configure the HTTP request pipeline.
 
-
+app.MapControllers();
 app.Run();  

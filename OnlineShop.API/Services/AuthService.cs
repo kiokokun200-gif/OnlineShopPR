@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using OnlineShop.API.Models;
@@ -13,7 +15,7 @@ namespace OnlineShop.API.Services
     {
         private PasswordHasher<User> hasher = new PasswordHasher<User>();
 
-        private readonly JWTOption _jwt;
+        private JWTOption _jwt = new JWTOption();
         private readonly OnlineShopContext onlineShopContext;
         public AuthService(IOptions<JWTOption> options, OnlineShopContext shopContext)
         {
@@ -21,13 +23,27 @@ namespace OnlineShop.API.Services
             onlineShopContext = shopContext;
         }   
 
-        public async Task<UserDTO> RegisterAsync(UserDTO userDTO)
+        public async Task<(string, bool)> RegisterAsync(string login, string password)
         {
-            return null;
+            var usr= await onlineShopContext.Users.FirstOrDefaultAsync(u=>u.Login == login);
+            if (usr!=null)
+            {
+                return ("Существует такой пользователь с таким логином", false);
+            }
+
+            User newUser = new User
+            {
+                Login = login,
+            };
+            newUser.PasswordHash = hasher.HashPassword(newUser, password);
+
+            await onlineShopContext.Users.AddAsync(newUser);
+            return ("Успешно!", true);
         }
         public async Task<(string, bool)> LoginAsync(UserDTO userDTO)
         {
-
+            var user = await onlineShopContext.Users.FirstOrDefaultAsync(u=>u.Login == userDTO.Login);
+            
             return ("null", false);
         }
 

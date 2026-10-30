@@ -1,15 +1,58 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using OnlineShop.API.Services;
+using OnlineShop.Core.DTOs.Auth;
 
 namespace OnlineShop.API.Controller
 {
-    [Controller]
+    [ApiController]
     [Route("api/auth")]
     public class AuthController : ControllerBase
     {
-        public AuthController()
+        private readonly AuthService _authService;
+
+        public AuthController(AuthService authService)
         {
 
+            _authService = authService;
         }
+
+        [HttpPost("register")]
+        [AllowAnonymous]
+        public async Task<IActionResult> RegisterAsync(RegisterRequest registerRequest)
+        {
+            if (!registerRequest.password.Equals(registerRequest.passwordConfirm))
+            {
+                return BadRequest(
+                    new RegisterResponse
+                    {
+                        message = "Пароли не совпадают",
+                        isRegister = false
+                    }
+                    );
+            }
+
+            var (message, isReg) = await _authService.RegisterAsync(registerRequest.login , registerRequest.password);
+            if (!isReg)
+            {
+                return BadRequest(
+                    new RegisterResponse
+                    {
+                        message = message,
+                        isRegister = false
+                    }
+                );
+            }
+            return Ok(
+                    new RegisterResponse
+                    {
+                        message = message,
+                        isRegister = true
+                    }
+                );
+        }
+
 
 
 

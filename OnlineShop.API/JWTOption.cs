@@ -5,13 +5,13 @@ namespace OnlineShop.API
 {
     public class JWTOption
     {
-        public static string SectionName { get; set; } = "JwtDemo";
-        public static string Issuer { get; set; } = "JwtOnlineShope";
-        public static string Audience { get; set; } = "JwtOnlineShopeApi";
+        public const string SectionName = "Jwt";
+        public string Issuer { get; set; } = "JwtOnlineShope";
+        public string Audience { get; set; } = "JwtOnlineShopeApi";
 
-        public static string Key { get; set; } = "my-super-secret-key-32-bytes!!";
+        public string Key { get; set; } = "my-super-secret-key-32-bytes!!";
 
-        public static SymmetricSecurityKey GetSymmetricSecurityKey() =>
+        public SymmetricSecurityKey GetSymmetricSecurityKey() =>
     new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Key));
 
     }
