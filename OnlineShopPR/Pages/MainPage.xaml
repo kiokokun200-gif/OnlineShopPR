@@ -32,11 +32,12 @@
         <ListBox Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}" x:Name="ListBoxGoods" Grid.ColumnSpan="2" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Grid Margin="10" Width="180" Height="220">
+                    <Grid Margin="10" Width="180" Height="250">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="140"/>
                             <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
@@ -50,6 +51,7 @@
                             <TextBlock Text="{Binding Rating, StringFormat={}★ {0:0.#}}" Foreground="#FFBA00" FontWeight="Bold" FontSize="12"/>
                             <TextBlock Text="{Binding ReviewCount, StringFormat={}{0} отзывов}" Margin="6,0,0,0" Foreground="#FF929292" FontSize="12"/>
                         </StackPanel>
+                        <Button x:Name="BtnAddInCart" Content="В корзину" Grid.Row="4" Margin="0 10 0 5"/>
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
