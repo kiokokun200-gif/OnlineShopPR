@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace OnlineShop.Core.DTOs.Auth
 {
-    internal class RegisterRequest
+    public class RegisterRequest
     {
+        public string login {  get; set; }
+        public string password { get; set; }
+        public string passwordConfirm { get; set; } = "";
+
     }
 }

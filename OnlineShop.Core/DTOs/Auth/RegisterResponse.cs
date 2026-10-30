@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace OnlineShop.Core.DTOs.Auth
 {
-    internal class RegisterResponse
+    public class RegisterResponse
     {
+        public string message { get; set; } 
+        public bool isRegister { get; set; }
     }
 }
