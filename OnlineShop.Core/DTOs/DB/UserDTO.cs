@@ -9,6 +9,6 @@ namespace OnlineShop.Core.DTOs.DB
     public class UserDTO
     {
         public string Login { get; set; }
-        public int RoleId { get; set; }
+        public string RoleName { get; set; }
     }
 }

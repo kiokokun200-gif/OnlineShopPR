@@ -53,8 +53,34 @@ namespace OnlineShop.API.Controller
                 );
         }
 
+        [HttpPost("login")]
+        [AllowAnonymous]
+        public async Task<IActionResult> LoginAsync(LoginRequest loginRequest)
+        {
 
+            var (message, token, user) = await _authService.LoginAsync(loginRequest.login, loginRequest.password);
+            if (token == null)
+            {
+                return BadRequest(new
+                LoginResponse{
+                    message = message,
+                    isLogin = true,
+                    token = token,
+                    user = user
+                });
+            }
+            return Ok(
+                    new
+                    LoginResponse
+                    {
+                        message = message,
+                        isLogin = true,
+                        token = token,
+                        user = user
+                    }
+                );
 
+        }
 
     }
 }

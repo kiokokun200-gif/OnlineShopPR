@@ -34,17 +34,36 @@ namespace OnlineShop.API.Services
             User newUser = new User
             {
                 Login = login,
+                RoleID=1
             };
             newUser.PasswordHash = hasher.HashPassword(newUser, password);
 
             await onlineShopContext.Users.AddAsync(newUser);
+            await onlineShopContext.SaveChangesAsync();
             return ("Успешно!", true);
         }
-        public async Task<(string, bool)> LoginAsync(UserDTO userDTO)
+        public async Task<(string, string?, UserDTO?)> LoginAsync(string login, string password)
         {
-            var user = await onlineShopContext.Users.FirstOrDefaultAsync(u=>u.Login == userDTO.Login);
-            
-            return ("null", false);
+            var rolsUser = onlineShopContext.Users.Include(u => u.Role);
+            var user = await rolsUser.FirstOrDefaultAsync(u => u.Login == login);
+            if (user == null)
+            {
+                return ("Такого пользователя нет",null, null);
+            }
+
+            var result = hasher.VerifyHashedPassword(user, user.PasswordHash, password);
+
+            if (result == PasswordVerificationResult.Failed)
+            {
+                return ("Неправильный логин/пароль",null, null);
+            }
+            var userLogin = new UserDTO
+            {
+                Login = login,
+                RoleName = user.Role.Name,
+            };
+            string token = CreateToken(userLogin);
+            return ("Успешно", token, userLogin );
         }
 
         string CreateToken(UserDTO account)
@@ -53,7 +72,7 @@ namespace OnlineShop.API.Services
             {
                 new Claim("sub", account.ToString()),
                 new Claim("name", account.Login),
-                new Claim("role", account.RoleId.ToString())
+                new Claim("role", account.RoleName)
             };
 
             var token = new JwtSecurityToken(
