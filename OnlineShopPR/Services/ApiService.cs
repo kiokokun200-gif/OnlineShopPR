@@ -15,7 +15,7 @@ namespace OnlineShopPR.Services
         static ApiService()
         {
             Client.BaseAddress =
-                new Uri("http://localhost:5000/");
+                new Uri("http://localhost:5103");
         }
 
         public static void SetToken(string token)

@@ -24,5 +24,11 @@ namespace OnlineShop.API.Controller
             int.TryParse(userStringId, out int userId);
             return Ok(_productsService.GetAllProducts(userId));
         }
+
+        [HttpGet("GetAllCategories")]
+        public async Task<IActionResult> GetAllCategories()
+        {
+            return Ok(_productsService.GetAllCategories());
+        }
     }
 }

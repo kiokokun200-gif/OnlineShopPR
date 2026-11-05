@@ -12,7 +12,7 @@ namespace OnlineShop.API.Services
             _context = shopContext;
         }
 
-        public List<ProductDTO> GetAllProducts(int userId)
+        public IEnumerable<ProductDTO> GetAllProducts(int userId)
         {
             var products = _context.Products
                 .Include(cat => cat.Categori)
@@ -22,22 +22,33 @@ namespace OnlineShop.API.Services
                     PathImg = p.PathImg,
                     CategoriName = p.Categori.Name,
                     Name = p.Name,
-                    Discription = p.Discription,
+                    Description = p.Discription,
                     isActive = p.isActive,
                     IsFavorite = userId == 0 ? false : p.FavoriteProducts.FirstOrDefault(f => f.UserID == userId) != null,
                     Price = p.Price,
                     Rating = p.Rating,
                     QuantityInPack = p.QuantityInPack,
                     QuantityInStock = p.QuantityInStock,
-                    ReviewCount = p.ReviewProducts.Count,
-
-
+                    ReviewCount = p.ReviewProducts.Count
                 }
-                )
-                
-                .ToList();
+                );
             return products;
         }
+
+
+        public IEnumerable<CategoryDTO> GetAllCategories()
+        {
+            var categories = _context.Categories.Select(c =>
+                new CategoryDTO
+                {
+                    CategoryID = c.CategoryID,
+                    Name = c.Name,
+                }
+
+            );
+            return categories;
+        }
+
 
     }
 }

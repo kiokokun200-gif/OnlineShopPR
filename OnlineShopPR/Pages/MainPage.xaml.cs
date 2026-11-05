@@ -43,10 +43,26 @@ namespace OnlineShopPR.Pages
             sort.Add("Сначала дешевле");
             sort.Add("Сначала дороже");
             ComboBoxSort.ItemsSource = sort;
-            goodCategories = Core.context.GoodCategory.Select(u => u.Name).ToList();
+            //goodCategories = Core.context.GoodCategory.Select(u => u.Name).ToList();
+            goodCategories = [];
             goodCategories.Insert(0, "Все");
             ComboBoxFiltr.ItemsSource = goodCategories;
 
+
+        }
+
+        private void TxtBoxSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void ComboBoxSort_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void ComboBoxFiltr_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
 
         }
     }
