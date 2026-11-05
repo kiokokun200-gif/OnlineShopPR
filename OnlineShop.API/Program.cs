@@ -50,6 +50,7 @@ builder.Services.AddScoped< AuthService>();
 
 
 builder.Services.AddTransient<ProductsService>();
+builder.Services.AddTransient<KorzinaService>();
 
 
 var app = builder.Build();

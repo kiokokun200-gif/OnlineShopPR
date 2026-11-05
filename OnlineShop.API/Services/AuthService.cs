@@ -11,13 +11,13 @@ using System.Text;
 
 namespace OnlineShop.API.Services
 {
-    public class AuthService
+    public class AuthService : BaseService
     {
         private PasswordHasher<User> hasher = new PasswordHasher<User>();
 
         private JWTOption _jwt = new JWTOption();
         private readonly OnlineShopContext onlineShopContext;
-        public AuthService(IOptions<JWTOption> options, OnlineShopContext shopContext)
+        public AuthService(IOptions<JWTOption> options, OnlineShopContext shopContext) : base(shopContext)
         {
             _jwt = options.Value;
             onlineShopContext = shopContext;

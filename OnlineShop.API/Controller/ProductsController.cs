@@ -6,7 +6,6 @@ using System.Security.Claims;
 namespace OnlineShop.API.Controller
 {
 
-    [ApiController]
     [Route("api/products")]
     public class ProductsController : ControllerBase
     {
@@ -21,14 +20,27 @@ namespace OnlineShop.API.Controller
         public IActionResult GetAllProducts()
         {
             string? userStringId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            int.TryParse(userStringId, out int userId);
+            _ = int.TryParse(userStringId, out int userId);
             return Ok(_productsService.GetAllProducts(userId));
         }
 
         [HttpGet("GetAllCategories")]
-        public async Task<IActionResult> GetAllCategories()
+        public IActionResult GetAllCategories()
         {
             return Ok(_productsService.GetAllCategories());
         }
+
+        [HttpPost("addProduct")]
+        public async Task<IActionResult> AddNewProduct(ProductDTO NewProduct)
+        {
+            return Ok(await _productsService.AddNewProduct(NewProduct));
+        }
+
+        [HttpPatch("changeProduct")]
+        public async Task<IActionResult> ChangeProduct(ProductDTO product)
+        {
+            return Ok(await _productsService.ChangeProduct(product));
+        }
+
     }
 }
