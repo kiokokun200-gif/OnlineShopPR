@@ -1,4 +1,5 @@
 ﻿using OnlineShop.Core.DTOs.DB;
+using OnlineShopPR.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,74 +22,72 @@ namespace OnlineShopPR.Pages
     /// </summary>
     public partial class AuthPage : Page
     {
+        AuthService authService = new AuthService();
         public AuthPage()
         {
             InitializeComponent();
         }
 
-        private void BtnLogin_Click(object sender, RoutedEventArgs e)
+        private async Task BtnLogin_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(TxtBoxLogLogin.Text) || string.IsNullOrEmpty(TxtBoxLogPassword.Password))
+            string login = TxtBoxLogLogin.Text;
+            string password = TxtBoxLogPassword.Password;
+            if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password))
             {
                 MessageBox.Show("Заполните все поля!");
                 return;
             }
-            
-            
-                //if (Login(TxtBoxLogLogin.Text, TxtBoxLogPassword.Password))
-                //{
-                //    MessageBox.Show($"Вход успешный!");
-                    
+            var res = await authService.LoginAsync(login, password);
+            if(res.Item1)
+            {
+                MessageBox.Show(res.Item2);
+                NavigationService.Navigate(new MainPage());
 
-                //}
-                //else
-                //{
-                //    MessageBox.Show("Пользователь с такими данными не найден");
-                //}
-
+            }
+            else
+            {
+                MessageBox.Show(res.Item2);
+            }
             
+
+
+
+
+
+
         }
 
-        private void BtnRegistr_Click(object sender, RoutedEventArgs e)
+        private async Task BtnRegistr_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(TxtBoxRegLogin.Text) || string.IsNullOrEmpty(TxtBoxRegPassword.Password) || string.IsNullOrEmpty(TxtBoxRegConfirmPassword.Password))
+            string login = TxtBoxRegLogin.Text;
+            string password = TxtBoxRegPassword.Password;
+            string confirmPassword = TxtBoxRegConfirmPassword.Password;
+            if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(confirmPassword))
             {
                 MessageBox.Show("Заполните все поля!");
                 return;
             }
-            
-            
-            //if (Registration(TxtBoxRegLogin.Text, TxtBoxRegPassword.Password))
-            //{
-            //    MessageBox.Show("Успешный вход!");
 
-            //}
-            //else MessageBox.Show("Ошибка регистрации");
+            var res = await authService.RegistrAsync(login, password, confirmPassword);
+
+            if (res.Item1)
+            {
+                MessageBox.Show(res.Item2);
+                TabAuth.SelectedIndex = 0;
+                TxtBoxLogLogin.Text = login;
+                TxtBoxLogPassword.Password = password;
+            }
+            else
+            {
+                MessageBox.Show(res.Item2);
+            }
+            
+            
+            
 
             
         }
 
-        //private bool Registration(string login, string password, out string message)
-        //{
-        //    //try
-        //    //{
-        //    //    var reguser = new UserDTO()
-        //    //    {
-                    
-
-        //    //    };
-        //    //    Core.Context.User.Add(reguser);
-        //    //    Core.Context.SaveChanges();
-        //    //    Login(number, password);
-        //    //    //UserData.CurrentUser = ;
-        //    //    message = string.Empty;
-        //    //    return true;
-        //    //}
-
-        //    //catch(Exception ex) {
-        //    //    message = ex.Message;
-        //    //    return false;
-        //    //}
-        //}
+        
     }
 }

@@ -1,5 +1,6 @@
 ﻿using OnlineShop.Core.DTOs;
 using OnlineShop.Core.DTOs.Auth;
+using OnlineShop.Core.DTOs.DB;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace OnlineShopPR.Services
 {
     class AuthService
     {
+        public static UserDTO? CurrentUser { get; set; }
         public async Task<(bool, string)> LoginAsync(string login, string password)
         {
 
@@ -27,16 +29,53 @@ namespace OnlineShopPR.Services
             var response = await ApiService.Client.PostAsJsonAsync("api/auth/login", request);
 
             var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
-            
-            if (result.isLogin)
+
+            if (result == null)
+                return (false, "Не удалось получить ответ от сервера");
+
+            if (result.isLogin && !string.IsNullOrEmpty(result.token))
             {
                 ApiService.SetToken(result.token);
-                return (true, result.token);
+                CurrentUser = result.user;
+
+                return (true, result.message);
             }
-            else return (false, result.message);
+
+            return (false, result.message);
+
+
+
+        }
+
+        public async Task<(bool, string)> RegistrAsync(string login, string password, string confirmPassword)
+        {
+
+            var request = new RegisterRequest
+            {
+                login = login,
+                password = password, 
+                passwordConfirm = confirmPassword
+            };
+
+
+            var response = await ApiService.Client.PostAsJsonAsync("api/auth/register", request);
+
+            var result = await response.Content.ReadFromJsonAsync<RegisterResponse>();
+
+            if (result == null)
+                return (false, "Не удалось получить ответ от сервера");
+
             
 
+            return (result.isRegister, result.message);
 
+
+
+        }
+        public void Logout()
+        {
+            ApiService.ClearToken();
+            CurrentUser = null;
         }
     }
 }

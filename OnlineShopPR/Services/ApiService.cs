@@ -23,5 +23,9 @@ namespace OnlineShopPR.Services
             Client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
         }
+        public static void ClearToken()
+        {
+            Client.DefaultRequestHeaders.Authorization = null;
+        }
     }
 }

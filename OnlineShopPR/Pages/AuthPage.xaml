@@ -9,7 +9,7 @@
       Title="AuthPage">
 
     <Grid>
-        <TabControl >
+        <TabControl x:Name="TabAuth" >
             <TabItem Header="ВХОД" FontSize="20">
                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top">
 
