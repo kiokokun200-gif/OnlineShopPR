@@ -65,7 +65,7 @@ namespace OnlineShop.API.Services
                 Categori = await _context.Categories.FirstAsync(c => c.Name == productNew.Name),
                 Price = productNew.Price,
                 PathImg = productNew.PathImg,
-                Rating = productNew.Rating,
+                Rating = 0,
                 QuantityInPack = productNew.QuantityInPack,
                 QuantityInStock = productNew.QuantityInStock,
                 isActive = productNew.isActive
@@ -90,7 +90,7 @@ namespace OnlineShop.API.Services
             product.Discription = productNewField.Description;
             product.Price = productNewField.Price;
             product.PathImg = productNewField.PathImg;
-            product.Rating = productNewField.Rating;
+            product.Rating = productNewField.Rating ?? 0;
             product.Categori = await _context.Categories.FirstAsync(c => c.Name == productNewField.Name);
             product.QuantityInPack = productNewField.QuantityInPack;
             product.QuantityInStock = productNewField.QuantityInStock;
