@@ -38,41 +38,13 @@ namespace OnlineShopPR.Pages
             //goods = Core.context.Good.ToList();
             //ListBoxGoods.ItemsSource = goods;
         }
-        private void LoadData()
-        {
-
-            sort.Add("Сначала лучшие");
-            sort.Add("Сначала дешевле");
-            sort.Add("Сначала дороже");
-            ComboBoxSort.ItemsSource = sort;
-            //goodCategories = Core.context.GoodCategory.Select(u => u.Name).ToList();
-            goodCategories = [];
-            goodCategories.Insert(0, "Все");
-            ComboBoxFiltr.ItemsSource = goodCategories;
-
-
-        }
-
-        private void TxtBoxSearch_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
-
-        private void ComboBoxSort_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
-
-        private void ComboBoxFiltr_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
+        
 
         private void BtnLogin_Click(object sender, RoutedEventArgs e)
         {
             if(UserData.CurrentUser != null)
             {
-                //
+                NavigationService.Navigate(new AccountPage());
             }
            else  NavigationService.Navigate(new AuthPage());
         }
@@ -85,9 +57,53 @@ namespace OnlineShopPR.Pages
             }
 
             _products = await productService.GetAllProducts();
-            goodCategories = _products.Select(p => p.CategoriName).Distinct().ToList();
-            ComboBoxFiltr.ItemsSource = goodCategories;
-            ListBoxGoods.ItemsSource = _products;
+            if (_products != null)
+            {
+                goodCategories = _products.Select(p => p.CategoriName).Distinct().ToList();
+                goodCategories.Insert(0, "Все");
+                ComboBoxFiltr.ItemsSource = goodCategories;
+                ListBoxGoods.ItemsSource = _products.Where(p=> p.isActive && p.QuantityInStock > 0);
+                TxtBoxPriceOt.Text = _products.OrderBy(p => p.Price).First().Price.ToString();
+                TxtBoxPriceDo.Text = _products.OrderByDescending(p => p.Price).First().Price.ToString();
+            }
+
+        }
+
+        private void BtnFind_Click(object sender, RoutedEventArgs e)
+        {
+            string search = TxtBoxSearch.Text;
+            string categ = ComboBoxFiltr.SelectedItem.ToString();
+            int priceDo = int.Parse(TxtBoxPriceDo.Text);
+            int priceOt = int.Parse(TxtBoxPriceOt.Text);
+
+            Find(search, categ, priceOt, priceDo);
+        }
+
+        private void Find(string search, string categ, int priceOt, int priceDo)
+        {
+            var prod = _products;
+            if(!string.IsNullOrEmpty(search))
+            {
+                prod = prod.Where(p => p.Name.ToLower().Contains(search.ToLower())).ToList();
+            }
+            else if(categ != "Все")
+            {
+                prod = prod.Where(p => p.CategoriName ==  categ).ToList();
+            }
+            prod = prod.Where(p => p.Price > priceOt && p.Price < priceDo).ToList();
+            ListBoxGoods.ItemsSource = prod;
+
+        }
+
+        private void TxtBoxPriceOt_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !char.IsDigit(e.Text[0]);
+        }
+
+        private void BtnAddInCart_Click(object sender, RoutedEventArgs e)
+        {
+            Button btn = sender as Button;
+            ProductDTO product = (ProductDTO)btn.DataContext;
 
         }
     }

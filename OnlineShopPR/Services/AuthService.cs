@@ -75,7 +75,7 @@ namespace OnlineShopPR.Services
         public void Logout()
         {
             ApiService.ClearToken();
-            CurrentUser = null;
+            UserData.CurrentUser = null;
         }
     }
 }
