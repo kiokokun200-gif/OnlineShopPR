@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:OnlineShopPR.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="MainPage">
+      Title="MainPage" Loaded="Page_Loaded">
 
     <Grid  >
         <Grid.RowDefinitions>
@@ -24,9 +24,15 @@
             
              <TextBox x:Name="TxtBoxSearch" Width="200" Margin="10 10" TextChanged="TxtBoxSearch_TextChanged" Padding="3"/>
                 
-            <ComboBox x:Name="ComboBoxSort" Width="150" Height="30" SelectedIndex="0" Foreground="Black" SelectionChanged="ComboBoxSort_SelectionChanged"/>
+            
             <ComboBox x:Name="ComboBoxFiltr" Margin="10 0" Width="150" Height="30" SelectedIndex="0" SelectionChanged="ComboBoxFiltr_SelectionChanged"/>
+            <TextBlock Text="Цена от " Margin="0 10" />
+            <TextBox x:Name="TxtBoxPriceOt" Width="40" Height="30" />
+            <TextBlock Text="  до  " Margin="0 10"/>
+            <TextBox x:Name="TxtBoxPriceDo" Width="40" Height="30" />
         </StackPanel>
+
+        <Button x:Name="BtnLogin" Grid.Column="1" Content="Войти" Margin="10" Click="BtnLogin_Click"/>
 
 
         <ListBox Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}" x:Name="ListBoxGoods" Grid.ColumnSpan="2" ScrollViewer.HorizontalScrollBarVisibility="Disabled">

@@ -4,5 +4,8 @@
     <Style TargetType="Grid">
         <Setter Property="Background" Value="White"/>
     </Style>
-    
+
+    <Style TargetType="TextBlock">
+        <Setter Property="FontSize" Value="18"/>
+    </Style>
 </ResourceDictionary>

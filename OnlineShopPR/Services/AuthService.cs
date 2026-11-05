@@ -15,7 +15,7 @@ namespace OnlineShopPR.Services
 {
     class AuthService
     {
-        public static UserDTO? CurrentUser { get; set; }
+        
         public async Task<(bool, string)> LoginAsync(string login, string password)
         {
 
@@ -36,7 +36,7 @@ namespace OnlineShopPR.Services
             if (result.isLogin && !string.IsNullOrEmpty(result.token))
             {
                 ApiService.SetToken(result.token);
-                CurrentUser = result.user;
+                UserData.CurrentUser = result.user;
 
                 return (true, result.message);
             }

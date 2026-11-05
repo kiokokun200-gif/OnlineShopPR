@@ -1,4 +1,5 @@
 ﻿using OnlineShop.Core.DTOs.DB;
+using OnlineShopPR.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace OnlineShopPR.Pages
     /// </summary>
     public partial class MainPage : Page
     {
+        ProductService productService = new ProductService();
         private List<ProductDTO> _products;
         private List<string> sort = new List<string>();
         private List<string> goodCategories;
@@ -63,6 +65,29 @@ namespace OnlineShopPR.Pages
 
         private void ComboBoxFiltr_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+
+        }
+
+        private void BtnLogin_Click(object sender, RoutedEventArgs e)
+        {
+            if(UserData.CurrentUser != null)
+            {
+                //
+            }
+           else  NavigationService.Navigate(new AuthPage());
+        }
+
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (UserData.CurrentUser != null)
+            {
+                BtnLogin.Content = "Аккаунт";
+            }
+
+            _products = await productService.GetAllProducts();
+            goodCategories = _products.Select(p => p.CategoriName).Distinct().ToList();
+            ComboBoxFiltr.ItemsSource = goodCategories;
+            ListBoxGoods.ItemsSource = _products;
 
         }
     }
