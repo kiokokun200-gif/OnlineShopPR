@@ -14,7 +14,7 @@ namespace OnlineShop.Core.DTOs.DB
 
         public string Discription { get; set; }
 
-        public int CategoriID { get; set; }
+        public string CategoriName { get; set; }
 
         public decimal Price { get; set; }
 
@@ -25,6 +25,10 @@ namespace OnlineShop.Core.DTOs.DB
         public int QuantityInStock { get; set; }
 
         public int QuantityInPack { get; set; }
+
+        public int ReviewCount { get; set; }
+
+        public bool IsFavorite { get; set; }
 
         public bool isActive { get; set; }
     }
