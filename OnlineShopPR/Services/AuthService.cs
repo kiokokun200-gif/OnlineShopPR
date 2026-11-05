@@ -25,21 +25,18 @@ namespace OnlineShopPR.Services
 
 
             var response = await ApiService.Client.PostAsJsonAsync("api/auth/login", request);
-            //response.EnsureSuccessStatusCode();
-
 
             var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
-            //var data = ;
-
-            //if (data == null || string.IsNullOrWhiteSpace(data.Token))
-            //    throw new ApiException(response.StatusCode, "Сервер вернул пустой токен");
-            if (result.isLogin) {
-             ApiService.SetToken(result.token);
-            }
-            // если хочешь сохранить пользователя и роль — раскомментируй, когда будут поля
-            // SessionService.CurrentUser = data.User;
-
-            //return true;
             
+            if (result.isLogin)
+            {
+                ApiService.SetToken(result.token);
+                return (true, result.token);
+            }
+            else return (false, result.message);
+            
+
+
+        }
     }
 }
