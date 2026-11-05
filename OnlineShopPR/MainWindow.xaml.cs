@@ -23,6 +23,7 @@ namespace OnlineShopPR
         public MainWindow()
         {
             InitializeComponent();
+            //mainFrame.Source = new
         }
     }
 }

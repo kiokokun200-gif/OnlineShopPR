@@ -29,11 +29,11 @@ public partial class Product
 
     public virtual Category Categori { get; set; }
 
-    public virtual FavoriteProduct FavoriteProduct { get; set; }
+    public virtual ICollection<FavoriteProduct> FavoriteProducts { get; set; } = new List<FavoriteProduct>();
 
     public virtual ICollection<KorzinaProduct> KorzinaProducts { get; set; } = new List<KorzinaProduct>();
 
     public virtual ICollection<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
 
-    public virtual ReviewProduct ReviewProduct { get; set; }
+    public virtual ICollection<ReviewProduct> ReviewProducts { get; set; } = new List<ReviewProduct>();
 }

@@ -43,7 +43,14 @@ builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<OnlineShopContext>();
 
-builder.Services.AddScoped< AuthService>(); 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped< AuthService>();
+
+
+builder.Services.AddTransient<ProductsService>();
+
 
 var app = builder.Build();
 
@@ -51,6 +58,8 @@ var app = builder.Build();
 app.UseAuthentication();
 app.UseAuthorization();
 // Configure the HTTP request pipeline.
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.MapControllers();
 app.Run();  
