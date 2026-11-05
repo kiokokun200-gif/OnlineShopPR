@@ -51,7 +51,6 @@ public partial class OnlineShopContext : DbContext
     {
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.Property(e => e.CategoryID).ValueGeneratedNever();
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(100);
@@ -61,7 +60,6 @@ public partial class OnlineShopContext : DbContext
         {
             entity.ToTable("DeliveryType");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.TypeName)
                 .IsRequired()
                 .HasMaxLength(50);
@@ -69,12 +67,10 @@ public partial class OnlineShopContext : DbContext
 
         modelBuilder.Entity<FavoriteProduct>(entity =>
         {
-            entity.Property(e => e.ID).ValueGeneratedNever();
-
-            entity.HasOne(d => d.IDNavigation).WithOne(p => p.FavoriteProduct)
-                .HasForeignKey<FavoriteProduct>(d => d.ID)
+            entity.HasOne(d => d.Product).WithMany(p => p.FavoriteProducts)
+                .HasForeignKey(d => d.ProductID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_FavoriteProducts_Products");
+                .HasConstraintName("FK_FavoriteProducts_Products1");
 
             entity.HasOne(d => d.User).WithMany(p => p.FavoriteProducts)
                 .HasForeignKey(d => d.UserID)
@@ -95,8 +91,6 @@ public partial class OnlineShopContext : DbContext
         modelBuilder.Entity<KorzinaProduct>(entity =>
         {
             entity.ToTable("KorzinaProduct");
-
-            entity.Property(e => e.ID).ValueGeneratedNever();
 
             entity.HasOne(d => d.Korzina).WithMany(p => p.KorzinaProducts)
                 .HasForeignKey(d => d.KorzinaID)
@@ -155,7 +149,6 @@ public partial class OnlineShopContext : DbContext
 
         modelBuilder.Entity<PickupPoint>(entity =>
         {
-            entity.Property(e => e.ID).ValueGeneratedNever();
             entity.Property(e => e.AddressName)
                 .IsRequired()
                 .HasMaxLength(200);
@@ -179,16 +172,15 @@ public partial class OnlineShopContext : DbContext
 
         modelBuilder.Entity<ReviewProduct>(entity =>
         {
-            entity.Property(e => e.ID).ValueGeneratedNever();
             entity.Property(e => e.Rating).HasColumnType("decimal(3, 2)");
             entity.Property(e => e.ReviewText)
                 .IsRequired()
                 .HasMaxLength(255);
 
-            entity.HasOne(d => d.IDNavigation).WithOne(p => p.ReviewProduct)
-                .HasForeignKey<ReviewProduct>(d => d.ID)
+            entity.HasOne(d => d.Product).WithMany(p => p.ReviewProducts)
+                .HasForeignKey(d => d.ProductID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_ReviewProducts_Products");
+                .HasConstraintName("FK_ReviewProducts_Products1");
 
             entity.HasOne(d => d.User).WithMany(p => p.ReviewProducts)
                 .HasForeignKey(d => d.UserID)
@@ -198,7 +190,6 @@ public partial class OnlineShopContext : DbContext
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.Property(e => e.ID).ValueGeneratedNever();
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(100);
@@ -208,7 +199,6 @@ public partial class OnlineShopContext : DbContext
         {
             entity.ToTable("Status");
 
-            entity.Property(e => e.ID).ValueGeneratedNever();
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(200);

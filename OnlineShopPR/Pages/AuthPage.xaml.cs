@@ -3,6 +3,7 @@ using OnlineShopPR.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -28,7 +29,7 @@ namespace OnlineShopPR.Pages
             InitializeComponent();
         }
 
-        private async Task BtnLogin_Click(object sender, RoutedEventArgs e)
+        private async void BtnLogin_Click(object sender, RoutedEventArgs e)
         {
             string login = TxtBoxLogLogin.Text;
             string password = TxtBoxLogPassword.Password;
@@ -57,7 +58,7 @@ namespace OnlineShopPR.Pages
 
         }
 
-        private async Task BtnRegistr_Click(object sender, RoutedEventArgs e)
+        private async void BtnRegistr_Click(object sender, RoutedEventArgs e)
         {
             string login = TxtBoxRegLogin.Text;
             string password = TxtBoxRegPassword.Password;
@@ -83,11 +84,7 @@ namespace OnlineShopPR.Pages
             }
             
             
-            
-
-            
         }
 
-        
     }
 }
