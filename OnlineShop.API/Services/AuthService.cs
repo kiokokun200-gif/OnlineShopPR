@@ -59,6 +59,7 @@ namespace OnlineShop.API.Services
             }
             var userLogin = new UserDTO
             {
+                UserId = user.UserID,
                 Login = login,
                 RoleName = user.Role.Name,
             };
@@ -70,7 +71,7 @@ namespace OnlineShop.API.Services
         {
             var claims = new[]
             {
-                new Claim("sub", account.ToString()),
+                new Claim("sub", account.UserId.ToString()),
                 new Claim("name", account.Login),
                 new Claim("role", account.RoleName)
             };

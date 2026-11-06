@@ -26,7 +26,7 @@ namespace OnlineShop.API.Services
         }
 
 
-        public async Task<IEnumerable<ProductDTO>> GetAllProducts(int userId)
+        public async Task<IEnumerable<KorzinaProductDTO>> GetAllProducts(int userId)
         {
             var korzina = await _context.Korzinas.FirstOrDefaultAsync(k=>k.UserID == userId);
             if (korzina == null)
@@ -34,24 +34,35 @@ namespace OnlineShop.API.Services
                 await AddKorzina(userId);
                 return [];
             }
-            var products = _context.KorzinaProducts.Where(k=>k.KorzinaID == korzina.KorzinaID).Select(p=>p.Product)
-                .Include(cat => cat.Categori)
+            var korzProd = _context.KorzinaProducts.Where(k => k.KorzinaID == korzina.KorzinaID);
+            if (korzProd.Count() == 0) return [];
+            var products = korzProd
+                //.Include(cat => cat.Categori)
                 .Select(p =>
-                new ProductDTO
+                new KorzinaProductDTO
                 {
-                    PathImg = p.PathImg,
-                    CategoriName = p.Categori.Name,
-                    Name = p.Name,
-                    Description = p.Discription,
-                    isActive = p.isActive,
-                    IsFavorite = userId == 0 ? false : p.FavoriteProducts.FirstOrDefault(f => f.UserID == userId) != null,
-                    Price = p.Price,
-                    Rating = p.Rating,
-                    QuantityInPack = p.QuantityInPack,
-                    QuantityInStock = p.QuantityInStock,
-                    ReviewCount = p.ReviewProducts.Count
+                    ProductDTO = new ProductDTO
+                    {
+                        ProductID = p.ProductID,
+                        PathImg = p.Product.PathImg,
+                        CategoriName = p.Product.Categori.Name,
+                        Name = p.Product.Name,
+                        Description = p.Product.Discription,
+                        isActive = p.Product.isActive,
+                        IsFavorite = userId == 0 ? false : p.Product.FavoriteProducts.FirstOrDefault(f => f.UserID == userId) != null,
+                        Price = p.Product.Price,
+                        Rating = p.Product.Rating,
+                        QuantityInPack = p.Product.QuantityInPack,
+                        QuantityInStock = p.Product.QuantityInStock,
+                        ReviewCount = p.Product.ReviewProducts.Count
+                    },
+                    Quantity = p.Quantity
+
                 }
                 );
+
+
+
             return products;
         }
 
@@ -64,22 +75,40 @@ namespace OnlineShop.API.Services
             {
                 korzinaId = await AddKorzina(userId);
             }
+            bool isNewProd = false;
             var quantProdInKorz = 0;
+
+
+            KorzinaProduct korzinProd = null;
             if (korzina is null)
             {
-                quantProdInKorz = _context.KorzinaProducts.Where(k => k.KorzinaID == korzinaId && k.ProductID == prodId).Count();
+                //korzinProd
+                quantProdInKorz = _context.KorzinaProducts.FirstOrDefaultAsync(k => k.KorzinaID == korzinaId && k.ProductID == prodId)?.;
+                isNewProd = quantProdInKorz == 0;
             }
+            quantProdInKorz += IsAdd ? 1 : -1;
+
             if (quantProdInKorz > product.QuantityInStock)
             {
                 return (false, "");
             }
-            var korzinaProd = new KorzinaProduct
+            if (isNewProd)
             {
-                ProductID = product.ProductID,
-                KorzinaID = korzinaId,
+                var korzinaProd = new KorzinaProduct
+                {
+                    ProductID = product.ProductID,
+                    KorzinaID = korzinaId,
+                    Quantity = quantProdInKorz 
+                };
 
-            };
-            return (true, $"Продукт '{product.Name}' успешно добавлен в корзину");
+                await _context.KorzinaProducts.AddAsync(korzinaProd);
+                await _context.SaveChangesAsync();
+                return (true, $"Продукт '{product.Name}' успешно добавлен в корзину");
+
+            }
+            
+            return (true, $"");
+
         }
 
 

@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnlineShop.API.Services;
+using System.Diagnostics;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace OnlineShop.API.Controller
 {
@@ -17,11 +19,15 @@ namespace OnlineShop.API.Controller
         }
 
         [HttpGet("AllProducts")]
-        public IActionResult GetAllProducts()
+        public async Task<IActionResult> GetAllProducts()
         {
             string? userStringId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Debug.WriteLine(userStringId);
             _ = int.TryParse(userStringId, out int userId);
-            return Ok(_korzinaService.GetAllProducts(userId));
+            var products = await _korzinaService.GetAllProducts(userId);
+
+            return Ok(products);
+            //return Ok( await _korzinaService.GetAllProducts(userId));
         }
 
 
