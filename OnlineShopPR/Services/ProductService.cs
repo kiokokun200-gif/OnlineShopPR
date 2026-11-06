@@ -15,5 +15,18 @@ namespace OnlineShopPR.Services
             var res = await ApiService.Client.GetFromJsonAsync<List<ProductDTO>>("api/products/AllProducts");
             return res ?? [];
         }
+
+        public async Task<bool>AddFavorite(int prodID)
+        {
+            var res = await ApiService.Client.PostAsync($"api/ /{prodID}", null);
+            return res.IsSuccessStatusCode;
+
+        }
+        public async Task<bool> RemoveFavorite(int prodID)
+        {
+            var res = await ApiService.Client.DeleteAsync($"api/ /{prodID}");
+            return res.IsSuccessStatusCode;
+
+        }
     }
 }

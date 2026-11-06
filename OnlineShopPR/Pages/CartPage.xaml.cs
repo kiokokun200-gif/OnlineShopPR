@@ -24,5 +24,10 @@ namespace OnlineShopPR.Pages
         {
             InitializeComponent();
         }
+
+        private void BtnBuyProduct_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

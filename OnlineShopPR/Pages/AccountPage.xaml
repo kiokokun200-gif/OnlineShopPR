@@ -9,6 +9,79 @@
       Title="AccountPage">
 
     <Grid>
+        <StackPanel  Margin="10">
+            <TextBlock Text="{Binding Login}" FontSize="22" FontWeight="Bold" Margin="0 0 0 10"/>
+            <TabControl>
+                <TabItem Header="Текущие заказы">
+                    <ItemsControl>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding }"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+
+                        
+                    </ItemsControl>
+                </TabItem>
+                <TabItem Header="История заказов">
+                    
+                </TabItem>
+                <TabItem Header="Избранное">
+                    <ItemsControl Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}" x:Name="ListBoxGoods" Grid.ColumnSpan="2" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="10" Width="180" Height="250">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="140"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <Image Grid.Row="0" Source="{Binding PathImg}" Stretch="Uniform" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,5"/>
+                                    <Button x:Name="BtnFavorite" Content="❤️"  Background="Transparent" Width="40" Height="40" BorderThickness="0" HorizontalAlignment="Right" VerticalAlignment="Top" Click="BtnFavorite_Click">
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Content" Value="♡"/>
+                                                <Setter Property="FontSize" Value="28"/>
+
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsFavorite}" Value="True">
+                                                        <Setter Property="Content" Value="❤️"/>
+                                                        <Setter Property="Foreground" Value="Red"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+
+                                    </Button>
+
+                                    <TextBlock Grid.Row="1" Text="{Binding Price, StringFormat={}{0} ₽}" FontSize="18" FontWeight="Bold" Margin="0,5,0,2"/>
+
+                                    <TextBlock Grid.Row="2" Text="{Binding Name}" FontSize="13" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Margin="0,0,0,5"/>
+
+                                    <StackPanel Grid.Row="3" Orientation="Horizontal" VerticalAlignment="Bottom">
+                                        <TextBlock Text="{Binding Rating, StringFormat={}★ {0:0.#}}" Foreground="#FFBA00" FontWeight="Bold" FontSize="12"/>
+                                        <TextBlock Text="{Binding ReviewCount, StringFormat={}{0} отзывов}" Margin="6,0,0,0" Foreground="#FF929292" FontSize="12"/>
+                                    </StackPanel>
+                                    <Button x:Name="BtnAddInCart" Content="В корзину" Grid.Row="4" Margin="0 10 0 5" Click="BtnAddInCart_Click"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </TabItem>
+            </TabControl>
+            
+        </StackPanel>
         
     </Grid>
 </Page>

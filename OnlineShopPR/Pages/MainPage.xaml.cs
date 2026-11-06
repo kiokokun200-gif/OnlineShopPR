@@ -106,5 +106,36 @@ namespace OnlineShopPR.Pages
             ProductDTO product = (ProductDTO)btn.DataContext;
 
         }
+
+        private async void BtnFavorite_Click(object sender, RoutedEventArgs e)
+        {
+            Button btn = sender as Button;
+            ProductDTO product = (ProductDTO)btn.DataContext;
+            bool res;
+            if (product != null)
+
+            {
+                if (product.IsFavorite)
+                {
+                    res = await productService.AddFavorite(product.ProductID);
+
+                }
+                else
+                {
+                    res = await productService.RemoveFavorite(product.ProductID);
+                }
+
+                if (res) { 
+                    product.IsFavorite = !product.IsFavorite;
+                    ListBoxGoods.Items.Refresh();
+                }
+                else
+                {
+                    MessageBox.Show("Ошибка");
+                }
+            }
+
+
+        }
     }
 }
