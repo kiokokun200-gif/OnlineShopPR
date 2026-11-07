@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OnlineShop.Core.DTOs.DB;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,12 @@ namespace OnlineShopPR.Pages
     /// </summary>
     public partial class ProductPage : Page
     {
-        public ProductPage()
+        private ProductDTO _product;
+        public ProductPage(ProductDTO product)
         {
             InitializeComponent();
+            _product = product;
+            DataContext = product;
         }
 
         private void BtnAddReview_Click(object sender, RoutedEventArgs e)

@@ -5,8 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OnlineShopPR.Windows"
         mc:Ignorable="d"
-        Title="AddReviewWindow" Height="450" Width="800">
+        Title="AddReviewWindow" Height="450" Width="400">
     <Grid>
-        
+        <StackPanel Margin="10">
+            <TextBlock Text="{Binding Name, StringFormat=Отзыв на книгу {0}}" FontSize="25" FontWeight="Bold"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Оценка: "/>
+                <ComboBox x:Name="ComboBoxRating" Width="50" SelectedIndex="0"/>
+
+            </StackPanel>
+            <TextBlock Text="Текст отзыва: "/>
+            <TextBox x:Name="TxtBoxTextReview" Width="370" Height="100" HorizontalContentAlignment="Stretch"/>
+            <Button x:Name="BtnAddReview" Content="Оставить отзыв" Click="BtnAddReview_Click"/>
+
+        </StackPanel>
     </Grid>
 </Window>
