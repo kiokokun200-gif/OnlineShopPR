@@ -137,5 +137,14 @@ namespace OnlineShopPR.Pages
 
 
         }
+
+        private void ListBoxGoods_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var prod = ListBoxGoods.SelectedItem as ProductDTO;
+            if (prod != null)
+            {
+                NavigationService.Navigate(new ProductPage(prod));
+            }
+        }
     }
 }
