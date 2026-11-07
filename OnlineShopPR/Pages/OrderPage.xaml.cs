@@ -20,9 +20,62 @@ namespace OnlineShopPR.Pages
     /// </summary>
     public partial class OrderPage : Page
     {
-        public OrderPage()
+        private OrderDTO _order;
+        //получить пвз
+
+        public OrderPage(OrderDTO order)
         {
             InitializeComponent();
+            _order = order;
+            DataContext = _order;
+            LoadDate();
+        }
+
+        private void LoadDate()
+        {
+            if(_order.TotalPrice < 600)
+            {
+                TxtWarning.Visibility = Visibility.Visible;
+                RadioDelivery.IsEnabled = false;
+
+            }
+            else
+            {
+                TxtWarning.Visibility = Visibility.Collapsed;
+                RadioDelivery.IsEnabled = true;
+
+            }
+            RefreshDeliveryPanels();
+        }
+
+        private void BtnConfirm_Click(object sender, RoutedEventArgs e)
+        {
+            string addressDelivery = TxtBoxDeliveryAddress.Text;
+            if (RadioDelivery.IsChecked == true && string.IsNullOrWhiteSpace(addressDelivery))
+            {
+                MessageBox.Show("Введите адрес доставки");
+                return;
+            }
+            //отправить заказ
+            MessageBox.Show("Заказ успешно оформлен!");
+        }
+        private void RefreshDeliveryPanels()
+        {
+            if (RadioDelivery.IsChecked == true)
+            {
+                StackDelivery.Visibility = Visibility.Visible;
+                StackPVZ.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                StackDelivery.Visibility = Visibility.Collapsed;
+                StackPVZ.Visibility = Visibility.Visible;
+            }
+        }
+        private void RadioDelivery_Checked(object sender, RoutedEventArgs e)
+        {
+            if (!IsLoaded) return;
+            RefreshDeliveryPanels();
         }
     }
 }

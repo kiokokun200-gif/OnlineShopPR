@@ -41,29 +41,41 @@
                 </ItemsControl>
             </TabItem>
             <TabItem Header="История заказов">
-                <ItemsControl d:ItemsSource="{d:SampleData ItemCount=5}" x:Name="ListOrdersHistory">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="auto"/>
-                                </Grid.ColumnDefinitions>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
-                                <StackPanel Grid.Column="0">
-                                    <TextBlock Text="{Binding OrderDate, StringFormat=Заказ от: {0:f}}"/>
-                                    <TextBlock Text="{Binding TotalPrice, StringFormat=Сумма заказа: {0:#.##}}"/>
-                                </StackPanel>
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10">
+                        
+                        <ComboBox x:Name="ComboBoxSortHistory" Width="200" SelectionChanged="ComboBoxSortHistory_SelectionChanged"/>
+                    </StackPanel>
+                    <ItemsControl Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}" x:Name="ListOrdersHistory">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
 
-                                <Button x:Name="BtnShowOrder" Content="Посмотреть" Grid.Column="1" Margin="0 10 10 10" Click="BtnShowOrder_Click"/>
-                            </Grid>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="{Binding OrderDate, StringFormat=Заказ от: {0:f}}"/>
+                                        <TextBlock Text="{Binding TotalPrice, StringFormat=Сумма заказа: {0:#.##}}"/>
+                                    </StackPanel>
+
+                                    <Button x:Name="BtnShowOrder" Content="Посмотреть" Grid.Column="1" Margin="0 10 10 10" Click="BtnShowOrder_Click"/>
+                                </Grid>
 
 
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
 
 
-                </ItemsControl>
+                    </ItemsControl>
+                </Grid>
+                
             </TabItem>
             <TabItem Header="Избранное">
                 <ItemsControl Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}" x:Name="ListBoxGoods" Grid.ColumnSpan="2" ScrollViewer.HorizontalScrollBarVisibility="Disabled">

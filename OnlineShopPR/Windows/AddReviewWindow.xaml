@@ -8,14 +8,14 @@
         Title="AddReviewWindow" Height="450" Width="400">
     <Grid>
         <StackPanel Margin="10">
-            <TextBlock Text="{Binding Name, StringFormat=Отзыв на книгу {0}}" FontSize="25" FontWeight="Bold"/>
+            <TextBlock Text="Отзыв" FontSize="25" FontWeight="Bold"/>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Оценка: "/>
                 <ComboBox x:Name="ComboBoxRating" Width="50" SelectedIndex="0"/>
 
             </StackPanel>
             <TextBlock Text="Текст отзыва: "/>
-            <TextBox x:Name="TxtBoxTextReview" Width="370" Height="100" HorizontalContentAlignment="Stretch"/>
+            <TextBox x:Name="TxtBoxTextReview" Width="370" Margin="0 0 0 10" Height="200" HorizontalContentAlignment="Stretch"/>
             <Button x:Name="BtnAddReview" Content="Оставить отзыв" Click="BtnAddReview_Click"/>
 
         </StackPanel>

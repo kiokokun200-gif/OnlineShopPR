@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OnlineShop.Core.DTOs.DB;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,6 +28,8 @@ namespace OnlineShopPR.Pages
 
         private void BtnBuyProduct_Click(object sender, RoutedEventArgs e)
         {
+            Button button = (Button)sender;
+            ProductDTO productDTO = (ProductDTO)button.DataContext;
 
         }
 

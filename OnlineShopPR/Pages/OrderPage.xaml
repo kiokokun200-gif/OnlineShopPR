@@ -9,14 +9,45 @@
       Title="OrderPage">
 
     <Grid>
-        <StackPanel Margin="10" >
-            <TextBlock Text="Заказ" FontSize="30" FontWeight="Bold" Margin="0 0 0 10"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
 
-            <TextBlock Text="Итоговая цена: " FontSize="22"/>
-            <TextBlock x:Name="TxtBlockTotalPrice" FontSize="22"/>
+        <StackPanel Grid.Row="0" Margin="10" >
+
+            <TextBlock  Text="Заказ" FontSize="30" FontWeight="Bold"  Margin="0 0 0 10"/>
+            <TextBlock Text="Тип доставки: " Margin="0 0 0 10"/>
+            <RadioButton Content="Самовывоз из ПВЗ" GroupName="Delivery" IsChecked="True"  Margin="0 0 0 10" Checked="RadioDelivery_Checked"/>
+            <RadioButton x:Name="RadioDelivery" Content="Доставка курьером" GroupName="Delivery" Margin="0 0 0 10" Checked="RadioDelivery_Checked" />
+
+            <TextBlock x:Name="TxtWarning" Text="⚠ Доставка курьером доступна от 600 рублей" FontSize="12" Foreground="Red" Margin="0 0 0 10"/>
+
+            <StackPanel x:Name="StackPVZ" Orientation="Horizontal">
+                
+                <TextBlock Text="Выберите ПВЗ:  "/>
+                <ComboBox x:Name="CombpPVZ" Width="300" SelectedIndex="0"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" x:Name="StackDelivery" Visibility="Collapsed">
+                <TextBlock Text="Введите адрес доставки: "/>
+                <TextBox x:Name="TxtBoxDeliveryAddress" Width="300"/>
+            </StackPanel>
         </StackPanel>
-       
-        <Button x:Name="BtnConfirm"  Content="Подтвердить заказ" FontSize="22" Width="200" Height="40" HorizontalAlignment="Left" Margin="10 10 0 0" Click="BtnConfirm_Click"/> 
+        <ItemsControl Grid.Row="1" Margin="10">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding FullDescription}"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <StackPanel Grid.Row="2" Margin="15">
+            <TextBlock Text="{Binding TotalPrice, StringFormat=Итоговая цена: {0}}" FontSize="22" Margin="0 0 0 10"/>
+            <Button x:Name="BtnConfirm"  Content="Подтвердить заказ" FontSize="22" Width="200" Height="40" HorizontalAlignment="Left"  Click="BtnConfirm_Click"/> 
+            
+        </StackPanel>
 
     </Grid>
 </Page>

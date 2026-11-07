@@ -24,9 +24,16 @@ namespace OnlineShopPR.Windows
             InitializeComponent();
             List<int> ratings = new List<int>()
             {
-                1, 2, 3, 4, 5
+                5, 4, 3, 2 , 1
             };
             ComboBoxRating.ItemsSource = ratings;
+        }
+
+        private void BtnAddReview_Click(object sender, RoutedEventArgs e)
+        {
+            int rating = (int)ComboBoxRating.SelectedItem;
+            string reviewText = TxtBoxTextReview.Text;
+
         }
     }
 }

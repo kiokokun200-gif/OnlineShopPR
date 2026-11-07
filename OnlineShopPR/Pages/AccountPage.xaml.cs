@@ -25,11 +25,19 @@ namespace OnlineShopPR.Pages
     {
         private List<OrderDTO> _currentOrders;
         private List<OrderDTO> _historyOrders;
+        private List<string> historySort;
         ProductService productService = new ProductService();
         KorzinaService korzinaService = new KorzinaService();
         public AccountPage()
         {
             InitializeComponent();
+            historySort = new List<string>()
+            {
+                "Сначала новые",
+                "Сначала старые"
+            };
+            ComboBoxSortHistory.ItemsSource = historySort;
+            ComboBoxSortHistory.SelectedIndex = 0;
         }
 
         private void BtnShowOrder_Click(object sender, RoutedEventArgs e)
@@ -132,6 +140,21 @@ namespace OnlineShopPR.Pages
             {
                 product.quantityInCart++;
                 ListBoxGoods.Items.Refresh();
+            }
+        }
+
+        private void ComboBoxSortHistory_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ComboBoxSortHistory.SelectedItem != null)
+            {
+                if(ComboBoxSortHistory.SelectedItem.ToString() == "Сначала новые")
+                {
+                    //сорт
+                }
+                else
+                {
+                    //
+                }
             }
         }
     }
