@@ -47,7 +47,7 @@
                                 <TextBlock Text="{Binding Quantity}" FontSize="20" Width="40" TextAlignment="Center"/>
                                 <Button x:Name="BtnPlusProd" Content="+" Width="30" Height="30" FontSize="20" Click="BtnPlusProd_Click"/>
                                 <Button x:Name="BtnDeleteProd" Content="🗑️" Width="40" Height="30" Margin="10,0,0,0" Click="BtnDeleteProd_Click"/>
-                                <Button x:Name="BtnBuyProduct" Content="Купить" Margin="10,0,0,0" Click=""/>
+                                <Button x:Name="BtnBuyProduct" Content="Купить" Margin="10,0,0,0" Click="BtnBuyProduct_Click"/>
                             </StackPanel>
                         </Grid>
                     </Border>
