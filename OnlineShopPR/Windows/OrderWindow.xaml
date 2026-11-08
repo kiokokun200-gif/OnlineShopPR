@@ -14,7 +14,7 @@
             
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Детали заказа" Margin="10" FontSize="20" FontWeight="Bold"/>
+        <TextBlock Text="Детали заказа" Margin="10" FontSize="25" FontWeight="Bold"/>
 
         <ItemsControl Grid.Row="1" x:Name="ListOrderProducts">
             <ItemsControl.ItemTemplate>

@@ -11,60 +11,162 @@
     <Grid>
         <TabControl>
             <TabItem Header="Товары">
-                <ItemsControl x:Name="ListProducts">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="auto"/>
-                                </Grid.ColumnDefinitions>
+                <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                    <Button Grid.Row="0" x:Name="BtnAddroduct" Content="Добавить товар" Width="200" HorizontalAlignment="Left" Margin="10" Click="BtnAddroduct_Click"/>
 
-                                <StackPanel Grid.Column="0">
-                                    <TextBlock Text="{Binding Name}"/>
-                                </StackPanel>
-                            </Grid>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                    <DataGrid Grid.Row="1">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" Binding="{Binding ProductID}">
+                                
+                            </DataGridTextColumn>
+                            <DataGridTemplateColumn Header="Image" Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Image Source="{Binding PathImg}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTemplateColumn Header="Информация">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Name}"/>
+                                            <TextBlock Text="{Binding CategoriName, StringFormat=Категория: {0}}"/>
+                                            <TextBlock Text="{Binding QuantityInPack, StringFormat=Количество в упаковке: {0}, TargetNullValue=''}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Цена" Binding="{Binding Price}" />
+                            <DataGridTextColumn Header="Рейтинг" Binding="{Binding Rating}"/>
+                            <DataGridTextColumn Header="Количество на складе" Binding="{Binding QuantityInStock}"/>
+                            <DataGridTextColumn Header="Активен" Binding="{Binding isActive}"/>
+                            <DataGridTemplateColumn Header="Действия">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button x:Name="BtnEditProduct" Content="✏️" Width="30" Background="Transparent" Click="BtnEditProduct_Click"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate >
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
             </TabItem>
 
             <TabItem Header="Категории товаров">
-                <ItemsControl x:Name="ListProductsCategory">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Button Grid.Row="0" x:Name="BtnAddroductCategory" Content="Добавить категорию" Width="200" HorizontalAlignment="Left" Margin="10" Click="BtnAddroductCategory_Click"/>
 
+
+                    <ItemsControl x:Name="ListProductsCategory" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}">
+                    <ItemsControl.ItemTemplate >
+                        <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Text="{Binding Name}"/>
+                                    <Button x:Name="BtnEditCategory" Content="✏️" Width="30" HorizontalAlignment="Right" Margin="5" Click="BtnEditCategory_Click"/>
+                                </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
+                </Grid>
             </TabItem>
 
             <TabItem Header="ПВЗ">
-                <ItemsControl x:Name="ListPVZ">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Button Grid.Row="0" x:Name="BtnAddPVZ" Content="Добавить ПВЗ" Width="200" HorizontalAlignment="Left" Margin="10"/>
 
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                    <ItemsControl x:Name="ListPVZ" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Text="{Binding Name}"/>
+                                    <Button x:Name="BtnEditPVZ" Content="✏️" Width="30" HorizontalAlignment="Right" Margin="5"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
             </TabItem>
             <TabItem Header="Заказы">
-                <ItemsControl x:Name="ListOrders">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
+                <DataGrid>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding OrderID}"/>
+                        <DataGridTextColumn Header="Дата" Binding="{Binding OrderDate, StringFormat={}{0:dd.MM.yyyy}}"/>
+                        <DataGridTextColumn Header="Клиент" Binding="{Binding UserLogin}"/>
+                        <DataGridTextColumn Header="Состав заказа" Binding="{Binding }"/>
+                        <DataGridTextColumn Header="Сумма" Binding="{Binding TotalPrice}"/>
+                        <DataGridTextColumn Header="Тип доставки" Binding="{Binding DeliveryTypeName}"  />
 
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                        <DataGridTemplateColumn Header="Адрес ПВЗ / Доставки" >
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock x:Name="AddressText" Text="{Binding PickupPointName}"/>
+
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding DeliveryTypeName}" Value="Курьер">  <!--посмотреть что в бд-->
+                                            <Setter TargetName="AddressText" Property="Text" Value="{Binding AddressDelivery}"/>
+                                        </DataTrigger>             
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTextColumn Header="Статус" Binding="{Binding StatusName}"/>
+                        <DataGridTemplateColumn Header="Изменить статус">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button x:Name="BtnChangeOrderStatus" Content="✏️" Width="30" Background="Transparent" Click="BtnChangeOrderStatus_Click"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+
+
+                    </DataGrid.Columns>
+                </DataGrid>
             </TabItem>
             <TabItem Header="Отзывы">
-                <ItemsControl x:Name="ListReview">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
+                <DataGrid>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Товар" Binding="{Binding ProductName}"/>
+                        <DataGridTextColumn Header="Клиент" Binding="{Binding UserLogin}"/>
+                        <DataGridTextColumn Header="Рейтинг" Binding="{Binding Rating}"/>
+                        <DataGridTextColumn Header="Текст отзыва" Binding="{Binding ReviewText}"/>
+                        <DataGridTextColumn Header="Дата" Binding="{Binding ReviewDate}"/>
 
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                        <DataGridTemplateColumn Header="Действия">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button x:Name="BtnDeleteReview" Content="🗑️" Width="30" Background="Transparent" Click="BtnDeleteReview_Click"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                    
+                </DataGrid>
 
             </TabItem>
         </TabControl>

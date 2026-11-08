@@ -8,7 +8,7 @@
         Title="AddReviewWindow" Height="450" Width="400">
     <Grid>
         <StackPanel Margin="10">
-            <TextBlock Text="Отзыв" FontSize="25" FontWeight="Bold"/>
+            <TextBlock Text="Отзыв" FontSize="25" FontWeight="Bold" Margin="0 0 0 10"/>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Оценка: "/>
                 <ComboBox x:Name="ComboBoxRating" Width="50" SelectedIndex="0"/>
