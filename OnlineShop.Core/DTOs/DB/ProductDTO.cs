@@ -18,9 +18,9 @@ namespace OnlineShop.Core.DTOs.DB
 
         public decimal Price { get; set; }
 
-        public string PathImg { get; set; }
+        public string? PathImg { get; set; } = "/images/products/default.png";
 
-        public decimal Rating { get; set; }
+        public decimal? Rating { get; set; } = 0;
 
         public int QuantityInStock { get; set; }
 

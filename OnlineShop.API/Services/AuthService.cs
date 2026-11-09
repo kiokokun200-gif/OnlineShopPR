@@ -11,13 +11,13 @@ using System.Text;
 
 namespace OnlineShop.API.Services
 {
-    public class AuthService
+    public class AuthService : BaseService
     {
         private PasswordHasher<User> hasher = new PasswordHasher<User>();
 
         private JWTOption _jwt = new JWTOption();
         private readonly OnlineShopContext onlineShopContext;
-        public AuthService(IOptions<JWTOption> options, OnlineShopContext shopContext)
+        public AuthService(IOptions<JWTOption> options, OnlineShopContext shopContext) : base(shopContext)
         {
             _jwt = options.Value;
             onlineShopContext = shopContext;
@@ -59,6 +59,7 @@ namespace OnlineShop.API.Services
             }
             var userLogin = new UserDTO
             {
+                UserId = user.UserID,
                 Login = login,
                 RoleName = user.Role.Name,
             };
@@ -70,7 +71,7 @@ namespace OnlineShop.API.Services
         {
             var claims = new[]
             {
-                new Claim("sub", account.ToString()),
+                new Claim("sub", account.UserId.ToString()),
                 new Claim("name", account.Login),
                 new Claim("role", account.RoleName)
             };
