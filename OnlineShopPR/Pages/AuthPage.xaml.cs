@@ -76,7 +76,6 @@ namespace OnlineShopPR.Pages
                 MessageBox.Show(res.Item2);
                 TabAuth.SelectedIndex = 0;
                 TxtBoxLogLogin.Text = login;
-                TxtBoxLogPassword.Password = password;
             }
             else
             {

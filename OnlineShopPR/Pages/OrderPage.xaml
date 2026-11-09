@@ -1,0 +1,53 @@
+﻿<Page x:Class="OnlineShopPR.Pages.OrderPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:OnlineShopPR.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="OrderPage">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="10" >
+
+            <TextBlock  Text="Заказ" FontSize="30" FontWeight="Bold"  Margin="0 0 0 10"/>
+            <TextBlock Text="Тип доставки: " Margin="0 0 0 10"/>
+            <RadioButton Content="Самовывоз из ПВЗ" GroupName="Delivery" IsChecked="True"  Margin="0 0 0 10" Checked="RadioDelivery_Checked"/>
+            <RadioButton x:Name="RadioDelivery" Content="Доставка курьером" GroupName="Delivery" Margin="0 0 0 10" Checked="RadioDelivery_Checked" />
+
+            <TextBlock x:Name="TxtWarning" Text="⚠ Доставка курьером доступна от 600 рублей" FontSize="12" Foreground="Red" Margin="0 0 0 10"/>
+
+            <StackPanel x:Name="StackPVZ" Orientation="Horizontal">
+                
+                <TextBlock Text="Выберите ПВЗ:  "/>
+                <ComboBox x:Name="CombpPVZ" Width="300" SelectedIndex="0"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" x:Name="StackDelivery" Visibility="Collapsed">
+                <TextBlock Text="Введите адрес доставки: "/>
+                <TextBox x:Name="TxtBoxDeliveryAddress" Width="300"/>
+            </StackPanel>
+        </StackPanel>
+        <ItemsControl Grid.Row="1" Margin="10">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding FullDescription}"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <StackPanel Grid.Row="2" Margin="15">
+            <TextBlock Text="{Binding TotalPrice, StringFormat=Итоговая цена: {0}}" FontSize="22" Margin="0 0 0 10"/>
+            <Button x:Name="BtnConfirm"  Content="Подтвердить заказ" FontSize="22" Width="200" Height="40" HorizontalAlignment="Left"  Click="BtnConfirm_Click"/> 
+            
+        </StackPanel>
+
+    </Grid>
+</Page>
