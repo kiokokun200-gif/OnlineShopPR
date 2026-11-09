@@ -1,4 +1,5 @@
 ﻿using OnlineShop.Core.DTOs.DB;
+using OnlineShopPR.Windows;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +32,21 @@ namespace OnlineShopPR.Pages
 
         private void BtnAddReview_Click(object sender, RoutedEventArgs e)
         {
+            if (UserData.CurrentUser == null)
+            {
+                MessageBoxResult res = MessageBox.Show("Требуется авторизация. Перейти на страницу авторизации?", "Требование", MessageBoxButton.YesNo);
+                if (res == MessageBoxResult.Yes)
+                {
+                    NavigationService.Navigate(new AuthPage());
+                }
+                else return;
+            }
 
+            else
+            {
+                var wind = new AddReviewWindow();
+                wind.ShowDialog();
+            }
         }
     }
 }

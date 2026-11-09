@@ -70,7 +70,14 @@ namespace OnlineShopPR.Pages
 
         private void BtnDeleteReview_Click(object sender, RoutedEventArgs e)
         {
+            Button button = (Button)sender;
+            ReviewDTO order = (ReviewDTO)button.DataContext;
 
+            MessageBoxResult result = MessageBox.Show("Хотите удалить отзыв?", "Предупреждение", MessageBoxButton.YesNo);
+            if (result == MessageBoxResult.Yes)
+            {
+                //удалить
+            }
         }
     }
 }
