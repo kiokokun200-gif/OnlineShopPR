@@ -21,8 +21,8 @@ namespace OnlineShop.API.Services
                     CategoriName = p.Categori.Name,
                     Name = p.Name,
                     Description = p.Discription,
-                    isActive = p.isActive,
-                    IsFavorite = userId == 0 ? false : p.FavoriteProducts.FirstOrDefault(f => f.UserID == userId) != null,
+                    isActive = p.IsActive,
+                    IsFavorite = userId == 0 ? false : p.FavoriteProducts.FirstOrDefault(f => f.UserId == userId) != null,
                     Price = p.Price,
                     Rating = p.Rating,
                     QuantityInPack = p.QuantityInPack,
@@ -39,7 +39,7 @@ namespace OnlineShop.API.Services
             var categories = _context.Categories.Select(c =>
                 new CategoryDTO
                 {
-                    CategoryID = c.CategoryID,
+                    CategoryID = c.CategoryId,
                     Name = c.Name,
                 }
 
@@ -68,7 +68,7 @@ namespace OnlineShop.API.Services
                 Rating = 0,
                 QuantityInPack = productNew.QuantityInPack,
                 QuantityInStock = productNew.QuantityInStock,
-                isActive = productNew.isActive
+                IsActive = productNew.isActive
             };
 
             await _context.Products.AddAsync(product);
@@ -81,7 +81,7 @@ namespace OnlineShop.API.Services
 
         public async Task<(bool, string)> ChangeProduct(ProductDTO productNewField)
         {
-            var product = await _context.Products.FirstOrDefaultAsync(p=>p.ProductID == productNewField.ProductID);
+            var product = await _context.Products.FirstOrDefaultAsync(p=>p.ProductId == productNewField.ProductID);
             if (product == null)
             {
                 return (false, "Такого продута нет");
@@ -94,7 +94,7 @@ namespace OnlineShop.API.Services
             product.Categori = await _context.Categories.FirstAsync(c => c.Name == productNewField.Name);
             product.QuantityInPack = productNewField.QuantityInPack;
             product.QuantityInStock = productNewField.QuantityInStock;
-            product.isActive = productNewField.isActive;
+            product.IsActive = productNewField.isActive;
 
             await _context.Products.AddAsync(product);
             await _context.SaveChangesAsync();

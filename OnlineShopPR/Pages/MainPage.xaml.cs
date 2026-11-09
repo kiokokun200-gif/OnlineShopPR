@@ -33,12 +33,6 @@ namespace OnlineShopPR.Pages
         {
             InitializeComponent();
         }
-        private void LoadGoods()
-        {
-            //goods = Core.context.Good.ToList();
-            //ListBoxGoods.ItemsSource = goods;
-        }
-        
 
         private void BtnLogin_Click(object sender, RoutedEventArgs e)
         {
@@ -63,8 +57,8 @@ namespace OnlineShopPR.Pages
                 goodCategories.Insert(0, "Все");
                 ComboBoxFiltr.ItemsSource = goodCategories;
                 ListBoxGoods.ItemsSource = _products.Where(p=> p.isActive && p.QuantityInStock > 0);
-                TxtBoxPriceOt.Text = _products.OrderBy(p => p.Price).First().Price.ToString();
-                TxtBoxPriceDo.Text = _products.OrderByDescending(p => p.Price).First().Price.ToString();
+                TxtBoxPriceOt.Text = ((int)_products.OrderBy(p => p.Price).First().Price).ToString();
+                TxtBoxPriceDo.Text = ((int)_products.OrderByDescending(p => p.Price).First().Price).ToString();
             }
 
         }

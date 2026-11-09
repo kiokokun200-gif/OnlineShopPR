@@ -33,6 +33,24 @@ namespace OnlineShopPR.Pages
 
         }
 
-        
+        private void BtnMinusProd_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+        }
+
+        private void BtnPlusProd_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BtnDeleteProd_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BtnOrder_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

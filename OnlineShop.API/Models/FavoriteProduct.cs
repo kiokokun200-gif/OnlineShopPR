@@ -7,11 +7,11 @@ namespace OnlineShop.API.Models;
 
 public partial class FavoriteProduct
 {
-    public int ID { get; set; }
+    public int Id { get; set; }
 
-    public int UserID { get; set; }
+    public int UserId { get; set; }
 
-    public int ProductID { get; set; }
+    public int ProductId { get; set; }
 
     public virtual Product Product { get; set; }
 

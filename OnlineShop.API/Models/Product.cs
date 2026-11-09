@@ -7,13 +7,13 @@ namespace OnlineShop.API.Models;
 
 public partial class Product
 {
-    public int ProductID { get; set; }
+    public int ProductId { get; set; }
 
     public string Name { get; set; }
 
     public string Discription { get; set; }
 
-    public int CategoriID { get; set; }
+    public int CategoriId { get; set; }
 
     public decimal Price { get; set; }
 
@@ -25,7 +25,7 @@ public partial class Product
 
     public int QuantityInPack { get; set; }
 
-    public bool isActive { get; set; }
+    public bool IsActive { get; set; }
 
     public virtual Category Categori { get; set; }
 

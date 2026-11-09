@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OnlineShop.Core.DTOs.DB;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,7 +34,8 @@ namespace OnlineShopPR.Pages
 
         private void LoadDate()
         {
-            if(_order.TotalPrice < 600)
+            if(20 < 600)
+            //if(_order.TotalPrice < 600)
             {
                 TxtWarning.Visibility = Visibility.Visible;
                 RadioDelivery.IsEnabled = false;

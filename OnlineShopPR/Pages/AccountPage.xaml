@@ -92,7 +92,7 @@
                                 </Grid.RowDefinitions>
 
                                 <Image Grid.Row="0" Source="{Binding PathImg}" Stretch="Uniform" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,5"/>
-                                <Button x:Name="BtnFavorite" Content="❤️"  Background="Transparent" Width="40" Height="40" BorderThickness="0" HorizontalAlignment="Right" VerticalAlignment="Top" Click="BtnFavorite_Click">
+                                <Button x:Name="BtnFavorite" Background="Transparent" Width="40" Height="40" BorderThickness="0" HorizontalAlignment="Right" VerticalAlignment="Top" Click="BtnFavorite_Click">
                                     <Button.Style>
                                         <Style TargetType="Button">
                                             <Setter Property="Content" Value="♡"/>

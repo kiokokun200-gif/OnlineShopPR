@@ -7,7 +7,7 @@ namespace OnlineShop.API.Models;
 
 public partial class Status
 {
-    public int ID { get; set; }
+    public int Id { get; set; }
 
     public string Name { get; set; }
 

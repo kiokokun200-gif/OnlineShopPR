@@ -7,9 +7,9 @@ namespace OnlineShop.API.Models;
 
 public partial class Order
 {
-    public int OrderID { get; set; }
+    public int OrderId { get; set; }
 
-    public int UserID { get; set; }
+    public int UserId { get; set; }
 
     public DateTime OrderDate { get; set; }
 
@@ -17,11 +17,11 @@ public partial class Order
 
     public string AddressDelivery { get; set; }
 
-    public int? PickupPointID { get; set; }
+    public int? PickupPointId { get; set; }
 
-    public int? DeliveryTypeID { get; set; }
+    public int? DeliveryTypeId { get; set; }
 
-    public int StatusID { get; set; }
+    public int StatusId { get; set; }
 
     public virtual DeliveryType DeliveryType { get; set; }
 

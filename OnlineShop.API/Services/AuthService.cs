@@ -34,7 +34,7 @@ namespace OnlineShop.API.Services
             User newUser = new User
             {
                 Login = login,
-                RoleID=1
+                RoleId=1
             };
             newUser.PasswordHash = hasher.HashPassword(newUser, password);
 
@@ -59,7 +59,7 @@ namespace OnlineShop.API.Services
             }
             var userLogin = new UserDTO
             {
-                UserId = user.UserID,
+                UserId = user.UserId,
                 Login = login,
                 RoleName = user.Role.Name,
             };

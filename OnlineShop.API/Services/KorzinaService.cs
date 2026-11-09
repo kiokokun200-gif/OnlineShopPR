@@ -16,25 +16,25 @@ namespace OnlineShop.API.Services
         {
             var korzina = new Korzina
             {
-                UserID = userId,
+                UserId = userId,
                 TotalPrice = 0,
             };
 
             await _context.Korzinas.AddAsync(korzina);
             await _context.SaveChangesAsync();
-            return korzina.KorzinaID;
+            return korzina.KorzinaId;
         }
 
 
         public async Task<IEnumerable<KorzinaProductDTO>> GetAllProducts(int userId)
         {
-            var korzina = await _context.Korzinas.FirstOrDefaultAsync(k=>k.UserID == userId);
+            var korzina = await _context.Korzinas.FirstOrDefaultAsync(k=>k.UserId == userId);
             if (korzina == null)
             {
                 await AddKorzina(userId);
                 return [];
             }
-            var korzProd = _context.KorzinaProducts.Where(k => k.KorzinaID == korzina.KorzinaID);
+            var korzProd = _context.KorzinaProducts.Where(k => k.KorzinaId == korzina.KorzinaId);
             if (korzProd.Count() == 0) return [];
             var products = korzProd
                 //.Include(cat => cat.Categori)
@@ -43,13 +43,13 @@ namespace OnlineShop.API.Services
                 {
                     ProductDTO = new ProductDTO
                     {
-                        ProductID = p.ProductID,
+                        ProductID = p.ProductId,
                         PathImg = p.Product.PathImg,
                         CategoriName = p.Product.Categori.Name,
                         Name = p.Product.Name,
                         Description = p.Product.Discription,
-                        isActive = p.Product.isActive,
-                        IsFavorite = userId == 0 ? false : p.Product.FavoriteProducts.FirstOrDefault(f => f.UserID == userId) != null,
+                        isActive = p.Product.IsActive,
+                        IsFavorite = userId == 0 ? false : p.Product.FavoriteProducts.FirstOrDefault(f => f.UserId == userId) != null,
                         Price = p.Product.Price,
                         Rating = p.Product.Rating,
                         QuantityInPack = p.Product.QuantityInPack,
@@ -68,9 +68,9 @@ namespace OnlineShop.API.Services
 
         public async Task<(bool, string)> AddProductToKorzina(int userId, int prodId, bool IsAdd)
         {
-            var product = await _context.Products.FirstOrDefaultAsync(p=>p.ProductID == prodId);
-            var korzina = await _context.Korzinas.FirstOrDefaultAsync(k => k.UserID == userId);
-            var korzinaId = korzina?.KorzinaID ?? -1;
+            var product = await _context.Products.FirstOrDefaultAsync(p=>p.ProductId == prodId);
+            var korzina = await _context.Korzinas.FirstOrDefaultAsync(k => k.UserId == userId);
+            var korzinaId = korzina?.KorzinaId ?? -1;
             if (korzinaId == -1)
             {
                 korzinaId = await AddKorzina(userId);
@@ -82,23 +82,30 @@ namespace OnlineShop.API.Services
             KorzinaProduct korzinProd = null;
             if (korzina is null)
             {
-                //korzinProd
-                quantProdInKorz = _context.KorzinaProducts.FirstOrDefaultAsync(k => k.KorzinaID == korzinaId && k.ProductID == prodId)?.;
-                isNewProd = quantProdInKorz == 0;
+                korzinProd = await _context.KorzinaProducts.FirstOrDefaultAsync(k => k.KorzinaId == korzinaId && k.ProductId == prodId);
+                if (korzinProd is null) isNewProd = true;
+                else
+                {
+                    quantProdInKorz = korzinProd.Quantity;
+                }
             }
             quantProdInKorz += IsAdd ? 1 : -1;
 
-            if (quantProdInKorz > product.QuantityInStock)
+            if (quantProdInKorz > product.QuantityInStock || quantProdInKorz < 0)
             {
                 return (false, "");
+            }
+            else if (quantProdInKorz == 0)
+            {
+
             }
             if (isNewProd)
             {
                 var korzinaProd = new KorzinaProduct
                 {
-                    ProductID = product.ProductID,
-                    KorzinaID = korzinaId,
-                    Quantity = quantProdInKorz 
+                    ProductId = product.ProductId,
+                    KorzinaId = korzinaId,
+                    Quantity = 1
                 };
 
                 await _context.KorzinaProducts.AddAsync(korzinaProd);
@@ -106,7 +113,9 @@ namespace OnlineShop.API.Services
                 return (true, $"Продукт '{product.Name}' успешно добавлен в корзину");
 
             }
-            
+            korzinProd.Quantity = quantProdInKorz;
+            await _context.SaveChangesAsync();
+
             return (true, $"");
 
         }

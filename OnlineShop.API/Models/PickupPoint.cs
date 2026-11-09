@@ -7,7 +7,7 @@ namespace OnlineShop.API.Models;
 
 public partial class PickupPoint
 {
-    public int ID { get; set; }
+    public int Id { get; set; }
 
     public string AddressName { get; set; }
 

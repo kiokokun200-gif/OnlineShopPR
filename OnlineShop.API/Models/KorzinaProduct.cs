@@ -7,11 +7,11 @@ namespace OnlineShop.API.Models;
 
 public partial class KorzinaProduct
 {
-    public int ID { get; set; }
+    public int Id { get; set; }
 
-    public int ProductID { get; set; }
+    public int ProductId { get; set; }
 
-    public int KorzinaID { get; set; }
+    public int KorzinaId { get; set; }
 
     public int Quantity { get; set; }
 

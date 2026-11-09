@@ -7,11 +7,11 @@ namespace OnlineShop.API.Models;
 
 public partial class OrderProduct
 {
-    public int OrderProductID { get; set; }
+    public int OrderProductId { get; set; }
 
-    public int OrderID { get; set; }
+    public int OrderId { get; set; }
 
-    public int ProductID { get; set; }
+    public int ProductId { get; set; }
 
     public int Quantity { get; set; }
 

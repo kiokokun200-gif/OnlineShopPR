@@ -7,17 +7,17 @@ namespace OnlineShop.API.Models;
 
 public partial class ReviewProduct
 {
-    public int ID { get; set; }
+    public int Id { get; set; }
 
-    public int UserID { get; set; }
+    public int UserId { get; set; }
 
-    public int ProductID { get; set; }
+    public int ProductId { get; set; }
 
     public string ReviewText { get; set; }
 
     public decimal Rating { get; set; }
 
-    public DateOnly ReviewDate { get; set; }
+    public DateTime ReviewDate { get; set; }
 
     public virtual Product Product { get; set; }
 

@@ -51,6 +51,7 @@ public partial class OnlineShopContext : DbContext
     {
         modelBuilder.Entity<Category>(entity =>
         {
+            entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(100);
@@ -67,23 +68,29 @@ public partial class OnlineShopContext : DbContext
 
         modelBuilder.Entity<FavoriteProduct>(entity =>
         {
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.ProductId).HasColumnName("ProductID");
+            entity.Property(e => e.UserId).HasColumnName("UserID");
+
             entity.HasOne(d => d.Product).WithMany(p => p.FavoriteProducts)
-                .HasForeignKey(d => d.ProductID)
+                .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_FavoriteProducts_Products1");
 
             entity.HasOne(d => d.User).WithMany(p => p.FavoriteProducts)
-                .HasForeignKey(d => d.UserID)
+                .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_FavoriteProducts_Users");
         });
 
         modelBuilder.Entity<Korzina>(entity =>
         {
+            entity.Property(e => e.KorzinaId).HasColumnName("KorzinaID");
             entity.Property(e => e.TotalPrice).HasColumnType("decimal(10, 2)");
+            entity.Property(e => e.UserId).HasColumnName("UserID");
 
             entity.HasOne(d => d.User).WithMany(p => p.Korzinas)
-                .HasForeignKey(d => d.UserID)
+                .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Korzinas_Users");
         });
@@ -92,40 +99,49 @@ public partial class OnlineShopContext : DbContext
         {
             entity.ToTable("KorzinaProduct");
 
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.KorzinaId).HasColumnName("KorzinaID");
+            entity.Property(e => e.ProductId).HasColumnName("ProductID");
+
             entity.HasOne(d => d.Korzina).WithMany(p => p.KorzinaProducts)
-                .HasForeignKey(d => d.KorzinaID)
+                .HasForeignKey(d => d.KorzinaId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_KorzinaProduct_Korzinas");
 
             entity.HasOne(d => d.Product).WithMany(p => p.KorzinaProducts)
-                .HasForeignKey(d => d.ProductID)
+                .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_KorzinaProduct_Products");
         });
 
         modelBuilder.Entity<Order>(entity =>
         {
+            entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.AddressDelivery).HasMaxLength(255);
+            entity.Property(e => e.DeliveryTypeId).HasColumnName("DeliveryTypeID");
             entity.Property(e => e.OrderDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
+            entity.Property(e => e.PickupPointId).HasColumnName("PickupPointID");
+            entity.Property(e => e.StatusId).HasColumnName("StatusID");
             entity.Property(e => e.TotalPrice).HasColumnType("decimal(10, 2)");
+            entity.Property(e => e.UserId).HasColumnName("UserID");
 
             entity.HasOne(d => d.DeliveryType).WithMany(p => p.Orders)
-                .HasForeignKey(d => d.DeliveryTypeID)
+                .HasForeignKey(d => d.DeliveryTypeId)
                 .HasConstraintName("FK_Orders_DeliveryType");
 
             entity.HasOne(d => d.PickupPoint).WithMany(p => p.Orders)
-                .HasForeignKey(d => d.PickupPointID)
+                .HasForeignKey(d => d.PickupPointId)
                 .HasConstraintName("FK_Orders_PickupPoints");
 
             entity.HasOne(d => d.Status).WithMany(p => p.Orders)
-                .HasForeignKey(d => d.StatusID)
+                .HasForeignKey(d => d.StatusId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Orders_Status");
 
             entity.HasOne(d => d.User).WithMany(p => p.Orders)
-                .HasForeignKey(d => d.UserID)
+                .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Orders_Users");
         });
@@ -134,21 +150,25 @@ public partial class OnlineShopContext : DbContext
         {
             entity.ToTable("OrderProduct");
 
+            entity.Property(e => e.OrderProductId).HasColumnName("OrderProductID");
+            entity.Property(e => e.OrderId).HasColumnName("OrderID");
+            entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.PurchasePrice).HasColumnType("decimal(10, 2)");
 
             entity.HasOne(d => d.Order).WithMany(p => p.OrderProducts)
-                .HasForeignKey(d => d.OrderID)
+                .HasForeignKey(d => d.OrderId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_OrderProduct_Orders");
 
             entity.HasOne(d => d.Product).WithMany(p => p.OrderProducts)
-                .HasForeignKey(d => d.ProductID)
+                .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_OrderProduct_Products");
         });
 
         modelBuilder.Entity<PickupPoint>(entity =>
         {
+            entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.AddressName)
                 .IsRequired()
                 .HasMaxLength(200);
@@ -156,7 +176,10 @@ public partial class OnlineShopContext : DbContext
 
         modelBuilder.Entity<Product>(entity =>
         {
+            entity.Property(e => e.ProductId).HasColumnName("ProductID");
+            entity.Property(e => e.CategoriId).HasColumnName("CategoriID");
             entity.Property(e => e.Discription).IsRequired();
+            entity.Property(e => e.IsActive).HasColumnName("isActive");
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(100);
@@ -165,31 +188,36 @@ public partial class OnlineShopContext : DbContext
             entity.Property(e => e.Rating).HasColumnType("decimal(3, 2)");
 
             entity.HasOne(d => d.Categori).WithMany(p => p.Products)
-                .HasForeignKey(d => d.CategoriID)
+                .HasForeignKey(d => d.CategoriId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Products_Categories");
         });
 
         modelBuilder.Entity<ReviewProduct>(entity =>
         {
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.Rating).HasColumnType("decimal(3, 2)");
+            entity.Property(e => e.ReviewDate).HasColumnType("date");
             entity.Property(e => e.ReviewText)
                 .IsRequired()
                 .HasMaxLength(255);
+            entity.Property(e => e.UserId).HasColumnName("UserID");
 
             entity.HasOne(d => d.Product).WithMany(p => p.ReviewProducts)
-                .HasForeignKey(d => d.ProductID)
+                .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ReviewProducts_Products1");
 
             entity.HasOne(d => d.User).WithMany(p => p.ReviewProducts)
-                .HasForeignKey(d => d.UserID)
+                .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ReviewProducts_Users");
         });
 
         modelBuilder.Entity<Role>(entity =>
         {
+            entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(100);
@@ -199,6 +227,7 @@ public partial class OnlineShopContext : DbContext
         {
             entity.ToTable("Status");
 
+            entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(200);
@@ -206,13 +235,15 @@ public partial class OnlineShopContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
+            entity.Property(e => e.UserId).HasColumnName("UserID");
             entity.Property(e => e.Login)
                 .IsRequired()
                 .HasMaxLength(255);
             entity.Property(e => e.PasswordHash).IsRequired();
+            entity.Property(e => e.RoleId).HasColumnName("RoleID");
 
             entity.HasOne(d => d.Role).WithMany(p => p.Users)
-                .HasForeignKey(d => d.RoleID)
+                .HasForeignKey(d => d.RoleId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Users_Roles");
         });

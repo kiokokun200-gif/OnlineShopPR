@@ -23,19 +23,20 @@ namespace OnlineShopPR.Pages
     /// </summary>
     public partial class AccountPage : Page
     {
-        private List<OrderDTO> _currentOrders;
-        private List<OrderDTO> _historyOrders;
+        //private List<OrderDTO> _currentOrders;
+        //private List<OrderDTO> _historyOrders;
         private List<string> historySort;
         ProductService productService = new ProductService();
         KorzinaService korzinaService = new KorzinaService();
         public AccountPage()
         {
             InitializeComponent();
-            historySort = new List<string>()
-            {
+            historySort =
+            [
                 "Сначала новые",
                 "Сначала старые"
-            };
+            ];
+
             ComboBoxSortHistory.ItemsSource = historySort;
             ComboBoxSortHistory.SelectedIndex = 0;
         }
@@ -73,7 +74,7 @@ namespace OnlineShopPR.Pages
                 }
                 else
                 {
-                    MessageBoxResult result = MessageBox.Show("Удалить из избранного? ", "Подтверждение", MessageBoxButton.YesNo);
+                    MessageBoxResult result = MessageBox.Show("Удалить из избранного?", "Подтверждение", MessageBoxButton.YesNo);
                     if (result == MessageBoxResult.Yes)
                     {
                         res = await productService.RemoveFavorite(product.ProductID);
@@ -102,8 +103,8 @@ namespace OnlineShopPR.Pages
 
             if (result)
             {
-                product.isInCart = true;
-                product.quantityInCart = 1;
+                //product.isInCart = true;
+                //product.quantityInCart = 1;
 
                 ListBoxGoods.Items.Refresh();
             }
@@ -117,13 +118,13 @@ namespace OnlineShopPR.Pages
 
             if (result)
             {
-                product.quantityInCart--;
+                //product.quantityInCart--;
 
-                if (product.quantityInCart <= 0)
-                {
-                    product.quantityInCart = 0;
-                    product.isInCart = false;
-                }
+                //if (product.quantityInCart <= 0)
+                //{
+                //    product.quantityInCart = 0;
+                //    product.isInCart = false;
+                //}
 
                 ListBoxGoods.Items.Refresh();
             }
@@ -138,9 +139,10 @@ namespace OnlineShopPR.Pages
 
             if (result)
             {
-                product.quantityInCart++;
+                //product.quantityInCart++;
                 ListBoxGoods.Items.Refresh();
             }
+
         }
 
         private void ComboBoxSortHistory_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -156,6 +158,11 @@ namespace OnlineShopPR.Pages
                     //
                 }
             }
+        }
+
+        private void AddToCart_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

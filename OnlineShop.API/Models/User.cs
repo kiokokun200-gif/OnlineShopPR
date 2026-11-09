@@ -7,13 +7,13 @@ namespace OnlineShop.API.Models;
 
 public partial class User
 {
-    public int UserID { get; set; }
+    public int UserId { get; set; }
 
     public string Login { get; set; }
 
     public string PasswordHash { get; set; }
 
-    public int RoleID { get; set; }
+    public int RoleId { get; set; }
 
     public virtual ICollection<FavoriteProduct> FavoriteProducts { get; set; } = new List<FavoriteProduct>();
 

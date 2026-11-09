@@ -7,9 +7,9 @@ namespace OnlineShop.API.Models;
 
 public partial class Korzina
 {
-    public int KorzinaID { get; set; }
+    public int KorzinaId { get; set; }
 
-    public int UserID { get; set; }
+    public int UserId { get; set; }
 
     public decimal TotalPrice { get; set; }
 
