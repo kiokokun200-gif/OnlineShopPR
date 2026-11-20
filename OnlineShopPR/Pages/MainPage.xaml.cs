@@ -23,6 +23,8 @@ namespace OnlineShopPR.Pages
     public partial class MainPage : Page
     {
         ProductService productService = new ProductService();
+        KorzinaService korzinaService = new KorzinaService();
+
         private List<ProductDTO> _products;
         private List<string> sort = new List<string>();
         private List<string> goodCategories;
@@ -80,11 +82,11 @@ namespace OnlineShopPR.Pages
             {
                 prod = prod.Where(p => p.Name.ToLower().Contains(search.ToLower())).ToList();
             }
-            else if(categ != "Все")
+            if(categ != "Все")
             {
                 prod = prod.Where(p => p.CategoriName ==  categ).ToList();
             }
-            prod = prod.Where(p => p.Price > priceOt && p.Price < priceDo).ToList();
+            prod = prod.Where(p => p.Price >= priceOt && p.Price <= priceDo).ToList();
             ListBoxGoods.ItemsSource = prod;
 
         }
@@ -94,11 +96,20 @@ namespace OnlineShopPR.Pages
             e.Handled = !char.IsDigit(e.Text[0]);
         }
 
-        private void BtnAddInCart_Click(object sender, RoutedEventArgs e)
+        private async void BtnAddInCart_Click(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
             ProductDTO product = (ProductDTO)btn.DataContext;
 
+            bool result = await korzinaService.AddProduct(product.ProductID);
+
+            if (result)
+            {
+                product.isInCart = true;
+                product.quantityInCart += 1;
+
+                ListBoxGoods.Items.Refresh();
+            }
         }
 
         private async void BtnFavorite_Click(object sender, RoutedEventArgs e)
@@ -139,6 +150,12 @@ namespace OnlineShopPR.Pages
             {
                 NavigationService.Navigate(new ProductPage(prod));
             }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new CartPage());
+
         }
     }
 }

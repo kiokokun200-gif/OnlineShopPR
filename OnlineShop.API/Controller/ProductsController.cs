@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OnlineShop.API.Services;
 using OnlineShop.Core.DTOs.DB;
 using System.Security.Claims;
 
 namespace OnlineShop.API.Controller
 {
-
+    [ApiController]
     [Route("api/products")]
     public class ProductsController : ControllerBase
     {
@@ -30,13 +31,16 @@ namespace OnlineShop.API.Controller
             return Ok(_productsService.GetAllCategories());
         }
 
+
         [HttpPost("addProduct")]
+        [Authorize]
         public async Task<IActionResult> AddNewProduct(ProductDTO NewProduct)
         {
             return Ok(await _productsService.AddNewProduct(NewProduct));
         }
 
         [HttpPatch("changeProduct")]
+        [Authorize]
         public async Task<IActionResult> ChangeProduct(ProductDTO product)
         {
             return Ok(await _productsService.ChangeProduct(product));

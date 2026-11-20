@@ -8,6 +8,8 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="MainPage" Loaded="Page_Loaded">
 
+    <Grid>
+        
     <Grid  >
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -34,7 +36,7 @@
             <Button x:Name="BtnFind" Content="Найти" Margin="10 10 " Click="BtnFind_Click"/>
         </StackPanel>
 
-        <Button x:Name="BtnLogin" Grid.Column="1" Content="Войти" Margin="10" Click="BtnLogin_Click"/>
+        <Button x:Name="BtnLogin" Grid.Column="1" Content="Войти" Margin="10" Click="BtnLogin_Click" Padding="5 0"/>
 
         <ListBox Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}" x:Name="ListBoxGoods" Grid.ColumnSpan="2" ScrollViewer.HorizontalScrollBarVisibility="Disabled" MouseDoubleClick="ListBoxGoods_MouseDoubleClick">
             <ListBox.ItemTemplate>
@@ -49,7 +51,7 @@
                         </Grid.RowDefinitions>
 
                         <Image Grid.Row="0" Source="{Binding PathImg}" Stretch="Uniform" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,5"/>
-                        <Button x:Name="BtnFavorite" Content="❤️"  Background="Transparent" Width="40" Height="40" BorderThickness="0" HorizontalAlignment="Right" VerticalAlignment="Top" Click="BtnFavorite_Click">
+                        <Button x:Name="BtnFavorite"   Background="Transparent" Width="40" Height="40" BorderThickness="0" HorizontalAlignment="Right" VerticalAlignment="Top" Click="BtnFavorite_Click">
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <Setter Property="Content" Value="♡"/>
@@ -85,5 +87,8 @@
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
         </ListBox>
+
+    </Grid>
+        <Button Content="🗑️" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="60" Height="60" Margin="15" Click="Button_Click" />
     </Grid>
 </Page>

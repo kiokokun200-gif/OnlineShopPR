@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace OnlineShop.Core.DTOs.DB
@@ -18,7 +19,20 @@ namespace OnlineShop.Core.DTOs.DB
 
         public decimal Price { get; set; }
 
-        public string? PathImg { get; set; } = "/images/products/default.png";
+        [JsonIgnore]
+        private string? _pathImg = "/images/products/default.png";
+        public string? PathImg
+        {
+            get
+            {
+                return _pathImg;
+            }
+            set
+            {
+                if (_pathImg != value || value != null)
+                    _pathImg = value;
+            }
+        } 
 
         public decimal? Rating { get; set; } = 0;
 
@@ -31,5 +45,9 @@ namespace OnlineShop.Core.DTOs.DB
         public bool IsFavorite { get; set; }
 
         public bool isActive { get; set; }
+        public bool isInCart { get; set; }
+
+        public int quantityInCart { get; set; } = 0;
+
     }
 }

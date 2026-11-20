@@ -2,6 +2,8 @@
 using OnlineShop.API.Models;
 using OnlineShop.Core.DTOs.DB;
 using System.Collections.Specialized;
+using System.Diagnostics;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace OnlineShop.API.Services
@@ -54,14 +56,17 @@ namespace OnlineShop.API.Services
                         Rating = p.Product.Rating,
                         QuantityInPack = p.Product.QuantityInPack,
                         QuantityInStock = p.Product.QuantityInStock,
-                        ReviewCount = p.Product.ReviewProducts.Count
+                        ReviewCount = p.Quantity,
+                        isInCart = p.Quantity > 0,
+                        
+                        quantityInCart = p.Product.KorzinaProducts.Count
                     },
                     Quantity = p.Quantity
 
                 }
                 );
 
-
+            //var d = products.ToList();
 
             return products;
         }
@@ -80,14 +85,24 @@ namespace OnlineShop.API.Services
 
 
             KorzinaProduct korzinProd = null;
-            if (korzina is null)
+            if (korzina == null)
             {
                 korzinProd = await _context.KorzinaProducts.FirstOrDefaultAsync(k => k.KorzinaId == korzinaId && k.ProductId == prodId);
-                if (korzinProd is null) isNewProd = true;
+                if (korzinProd == null) isNewProd = true;
                 else
                 {
                     quantProdInKorz = korzinProd.Quantity;
                 }
+            }
+            else
+            {
+                korzinProd = await _context.KorzinaProducts.FirstOrDefaultAsync(k => k.KorzinaId == korzinaId && k.ProductId == prodId);
+                if (korzinProd == null) isNewProd = true;
+                else
+                {
+                    quantProdInKorz = korzinProd.Quantity;
+                }
+
             }
             quantProdInKorz += IsAdd ? 1 : -1;
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnlineShop.API.Models;
 using OnlineShop.Core.DTOs.DB;
+using System.Linq;
 
 namespace OnlineShop.API.Services
 {
@@ -12,11 +13,14 @@ namespace OnlineShop.API.Services
 
         public IEnumerable<ProductDTO> GetAllProducts(int userId)
         {
+            //var quantityInCart = _context.KorzinaProducts.Where(k=>k.);
+
             var products = _context.Products
                 .Include(cat => cat.Categori)
                 .Select(p =>
                 new ProductDTO
                 {
+                    ProductID = p.ProductId,
                     PathImg = p.PathImg,
                     CategoriName = p.Categori.Name,
                     Name = p.Name,
@@ -27,9 +31,11 @@ namespace OnlineShop.API.Services
                     Rating = p.Rating,
                     QuantityInPack = p.QuantityInPack,
                     QuantityInStock = p.QuantityInStock,
-                    ReviewCount = p.ReviewProducts.Count
+                    ReviewCount = p.ReviewProducts.Count,
+                    isInCart = p.KorzinaProducts.Count > 0,
+                    quantityInCart = p.KorzinaProducts.Count
                 }
-                );
+            );
             return products;
         }
 
@@ -55,7 +61,6 @@ namespace OnlineShop.API.Services
             {
                 return (false, "Продукт с таким названием уже есть");
             }
-
 
 
             Product product = new()

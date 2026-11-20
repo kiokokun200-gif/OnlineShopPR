@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using OnlineShop.API.Services;
 using System.Diagnostics;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace OnlineShop.API.Controller
@@ -25,6 +26,9 @@ namespace OnlineShop.API.Controller
             Debug.WriteLine(userStringId);
             _ = int.TryParse(userStringId, out int userId);
             var products = await _korzinaService.GetAllProducts(userId);
+            Debug.WriteLine("------------------------------");
+            Debug.WriteLine(JsonSerializer.Serialize(products.ToList()));
+            Debug.WriteLine("------------------------------");
 
             return Ok(products);
             //return Ok( await _korzinaService.GetAllProducts(userId));

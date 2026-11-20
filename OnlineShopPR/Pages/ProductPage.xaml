@@ -16,11 +16,13 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        <Button  HorizontalAlignment="Right" Grid.Column="1" Content="Назад" FontSize="22" FontWeight="Bold" VerticalAlignment="Top" Padding="10 0" Click="Button_Click"/>
 
-        <Image Grid.Column="0" Source="{Binding PathImg}" Width="300" Margin="10" Grid.RowSpan="2"/>
-        <StackPanel Grid.Column="1" Margin="10">
+        <Image Grid.Column="0" Source="{Binding PathImg}" Grid.Row="1" Width="300" Margin="10" Grid.RowSpan="2"/>
+        <StackPanel Grid.Column="1" Margin="10" Grid.Row="1">
             <TextBlock Text="{Binding Name}" FontSize="30" FontWeight="Bold"/>
             <TextBlock Text="{Binding Price, StringFormat={}{0:0.##} ₽}" FontSize="22"/>
             <TextBlock Text="{Binding Description, StringFormat=Описание:{0}}"/>

@@ -1,4 +1,5 @@
 ﻿using OnlineShop.Core.DTOs.DB;
+using OnlineShopPR.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,10 +22,14 @@ namespace OnlineShopPR.Pages
     /// </summary>
     public partial class CartPage : Page
     {
+        KorzinaService korzinaService = new KorzinaService();
+
         public CartPage()
         {
             InitializeComponent();
         }
+
+
 
         private void BtnBuyProduct_Click(object sender, RoutedEventArgs e)
         {
@@ -51,6 +56,18 @@ namespace OnlineShopPR.Pages
         private void BtnOrder_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.GoBack();
+        }
+
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            var lstCarts = await korzinaService.allProductInCart();
+            TxtBlockCartQuantity.Text = lstCarts.Sum(k=>k.Quantity).ToString() ;
+            ListBoxProductsInCart.ItemsSource = lstCarts;
         }
     }
 }

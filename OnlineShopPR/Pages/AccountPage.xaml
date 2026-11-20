@@ -13,8 +13,19 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-            
-        <TextBlock Grid.Row="0" Text="{Binding Login}" FontSize="22" FontWeight="Bold" Margin="0 0 0 10"/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
+                <Image Source="/images/user-avatar.png" Width="60" Height="60"/>
+                <TextBlock Text="Login" FontSize="22" FontWeight="Bold" Margin="0 0 0 10"/>
+
+            </StackPanel>
+            <Button  HorizontalAlignment="Right" Grid.Column="1" Content="Назад" FontSize="22" FontWeight="Bold" VerticalAlignment="Top" Padding="10 0" Click="Button_Click"/>
+            <TextBlock/>
+        </Grid>
         <TabControl Grid.Row="1" Margin="10">
             <TabItem Header="Текущие заказы">
                 <ItemsControl d:ItemsSource="{d:SampleData ItemCount=5}" x:Name="ListCurrentOrders">

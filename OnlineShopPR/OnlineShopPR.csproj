@@ -9,7 +9,37 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="images\headphones.jpg" />
+    <None Remove="images\kettle.jpg" />
+    <None Remove="images\phone10.jpg" />
+    <None Remove="images\sql_book.jpg" />
+    <None Remove="images\tshirt_black.jpg" />
+    <None Remove="images\user-avatar.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\OnlineShop.Core\OnlineShop.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="images\products\headphones.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\products\kettle.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\products\phone10.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\products\sql_book.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\products\tshirt_black.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\user-avatar.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>
