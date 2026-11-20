@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnlineShop.API.Services;
-using System.Diagnostics;
 using System.Security.Claims;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace OnlineShop.API.Controller
 {
@@ -23,15 +20,9 @@ namespace OnlineShop.API.Controller
         public async Task<IActionResult> GetAllProducts()
         {
             string? userStringId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            Debug.WriteLine(userStringId);
             _ = int.TryParse(userStringId, out int userId);
             var products = await _korzinaService.GetAllProducts(userId);
-            Debug.WriteLine("------------------------------");
-            Debug.WriteLine(JsonSerializer.Serialize(products.ToList()));
-            Debug.WriteLine("------------------------------");
-
             return Ok(products);
-            //return Ok( await _korzinaService.GetAllProducts(userId));
         }
 
 
@@ -40,7 +31,17 @@ namespace OnlineShop.API.Controller
         {
             string? userStringId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             _ = int.TryParse(userStringId, out int userId);
-            return Ok( await _korzinaService.AddProductToKorzina(userId, prodId, isAdd));
+            var res = await _korzinaService.AddProductToKorzina(userId, prodId, isAdd);
+            return Ok(new { isOk = res.Item1, message = res.Item2 });
+        }
+
+        [HttpDelete("removeProduct/{prodId}")]
+        public async Task<IActionResult> RemoveProduct(int prodId)
+        {
+            string? userStringId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            _ = int.TryParse(userStringId, out int userId);
+            var res = await _korzinaService.RemoveProduct(userId, prodId);
+            return Ok(new { isOk = res.Item1, message = res.Item2 });
         }
 
     }

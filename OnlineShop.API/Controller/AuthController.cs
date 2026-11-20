@@ -33,7 +33,7 @@ namespace OnlineShop.API.Controller
                     );
             }
 
-            var (message, isReg) = await _authService.RegisterAsync(registerRequest.login , registerRequest.password);
+            var (message, isReg) = await _authService.RegisterAsync(registerRequest.login, registerRequest.password);
             if (!isReg)
             {
                 return BadRequest(
@@ -62,9 +62,10 @@ namespace OnlineShop.API.Controller
             if (token == null)
             {
                 return BadRequest(new
-                LoginResponse{
+                LoginResponse
+                {
                     message = message,
-                    isLogin = true,
+                    isLogin = false,
                     token = token,
                     user = user
                 });

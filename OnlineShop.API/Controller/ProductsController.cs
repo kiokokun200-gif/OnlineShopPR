@@ -31,19 +31,30 @@ namespace OnlineShop.API.Controller
             return Ok(_productsService.GetAllCategories());
         }
 
+        [HttpGet("{id}")]
+        public IActionResult GetProduct(int id)
+        {
+            string? userStringId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            _ = int.TryParse(userStringId, out int userId);
+            var prod = _productsService.GetProductById(id, userId);
+            if (prod == null) return NotFound();
+            return Ok(prod);
+        }
 
         [HttpPost("addProduct")]
-        [Authorize]
+        [Authorize(Roles = "Админ")]
         public async Task<IActionResult> AddNewProduct(ProductDTO NewProduct)
         {
-            return Ok(await _productsService.AddNewProduct(NewProduct));
+            var res = await _productsService.AddNewProduct(NewProduct);
+            return Ok(new { isOk = res.Item1, message = res.Item2 });
         }
 
         [HttpPatch("changeProduct")]
-        [Authorize]
+        [Authorize(Roles = "Админ")]
         public async Task<IActionResult> ChangeProduct(ProductDTO product)
         {
-            return Ok(await _productsService.ChangeProduct(product));
+            var res = await _productsService.ChangeProduct(product);
+            return Ok(new { isOk = res.Item1, message = res.Item2 });
         }
 
     }
