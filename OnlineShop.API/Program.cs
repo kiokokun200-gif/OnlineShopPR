@@ -63,7 +63,8 @@ builder.Services.AddSwaggerGen(options =>
         Scheme = "bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "JWT Authorization header"
+        Description = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzIiwibmFtZSI6InN0cmluZyIsInJvbGUiOiLQmtC70LjQtdC90YIiLCJpc3MiOiJKd3RPbmxpbmVTaG9wZSIsImF1ZCI6Ikp3dE9ubGluZVNob3BlQXBpIn0.HvS9EdjAStZj4n_eRWQP1xP6_K2DjQdQYHJLcKjLjjw"
+
     });
 
     options.AddSecurityRequirement(new OpenApiSecurityRequirement

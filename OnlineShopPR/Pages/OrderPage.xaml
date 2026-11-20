@@ -22,7 +22,7 @@
             <RadioButton Content="Самовывоз из ПВЗ" GroupName="Delivery" IsChecked="True"  Margin="0 0 0 10" Checked="RadioDelivery_Checked"/>
             <RadioButton x:Name="RadioDelivery" Content="Доставка курьером" GroupName="Delivery" Margin="0 0 0 10" Checked="RadioDelivery_Checked" />
 
-            <TextBlock x:Name="TxtWarning" Text="⚠ Доставка курьером доступна от 600 рублей" FontSize="12" Foreground="Red" Margin="0 0 0 10"/>
+            <TextBlock x:Name="TxtWarning" Text="⚠ Доставка курьером доступна при сумме заказа больше 600 ₽" FontSize="12" Foreground="Red" Margin="0 0 0 10"/>
 
             <StackPanel x:Name="StackPVZ" Orientation="Horizontal">
                 

@@ -1,4 +1,4 @@
-﻿using OnlineShop.Core.DTOs.DB;
+using OnlineShop.Core.DTOs.DB;
 using OnlineShopPR.Services;
 using System;
 using System.Collections.Generic;
@@ -39,23 +39,18 @@ namespace OnlineShopPR.Pages
                 return;
             }
             var res = await authService.LoginAsync(login, password);
-            if(res.Item1)
+            if (res.Item1)
             {
                 MessageBox.Show(res.Item2);
-                NavigationService.Navigate(new MainPage());
-
+                if (UserData.CurrentUser != null && (UserData.CurrentUser.RoleName == "Админ"))
+                    NavigationService.Navigate(new AdminPage());
+                else
+                    NavigationService.Navigate(new MainPage());
             }
             else
             {
                 MessageBox.Show(res.Item2);
             }
-            
-
-
-
-
-
-
         }
 
         private async void BtnRegistr_Click(object sender, RoutedEventArgs e)
@@ -81,8 +76,6 @@ namespace OnlineShopPR.Pages
             {
                 MessageBox.Show(res.Item2);
             }
-            
-            
         }
 
     }

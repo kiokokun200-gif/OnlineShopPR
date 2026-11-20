@@ -1,4 +1,4 @@
-﻿using OnlineShop.Core.DTOs.DB;
+using OnlineShop.Core.DTOs.DB;
 using OnlineShopPR.Services;
 using System;
 using System.Collections.Generic;
@@ -23,39 +23,111 @@ namespace OnlineShopPR.Pages
     public partial class CartPage : Page
     {
         KorzinaService korzinaService = new KorzinaService();
+        List<KorzinaProductDTO> _items = new List<KorzinaProductDTO>();
 
         public CartPage()
         {
             InitializeComponent();
         }
 
+        private async Task LoadCart()
+        {
+            _items = await korzinaService.allProductInCart();
+            ListBoxProductsInCart.ItemsSource = _items;
+            TxtBlockCartQuantity.Text = _items.Sum(k => k.Quantity).ToString();
+            decimal total = _items.Sum(k => k.Quantity * k.ProductDTO.Price);
+            TxtBlcTotalPrice.Text = $"{total} ₽";
 
+            if (_items.Count == 0)
+            {
+                TxtBlockEmptyCart.Visibility = Visibility.Visible;
+                StackTotalPrice.Visibility = Visibility.Collapsed;
+                BtnOrder.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                TxtBlockEmptyCart.Visibility = Visibility.Collapsed;
+                StackTotalPrice.Visibility = Visibility.Visible;
+                BtnOrder.Visibility = Visibility.Visible;
+            }
+        }
 
         private void BtnBuyProduct_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            ProductDTO productDTO = (ProductDTO)button.DataContext;
+            var item = (KorzinaProductDTO)button.DataContext;
+            if (item == null) return;
 
+            var order = new OrderDTO
+            {
+                TotalPrice = item.Quantity * item.ProductDTO.Price,
+                Items = new List<OrderProductDTO>
+                {
+                    new OrderProductDTO
+                    {
+                        ProductId = item.ProductDTO.ProductID,
+                        Name = item.ProductDTO.Name,
+                        Quantity = item.Quantity,
+                        PurchasePrice = item.ProductDTO.Price
+                    }
+                }
+            };
+            NavigationService.Navigate(new OrderPage(order, item.ProductDTO.ProductID));
         }
 
-        private void BtnMinusProd_Click(object sender, RoutedEventArgs e)
+        private async void BtnMinusProd_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
+            var item = (KorzinaProductDTO)button.DataContext;
+            if (item == null) return;
+
+            var res = await korzinaService.Remove(item.ProductDTO.ProductID);
+            if (!res.Item1 && !string.IsNullOrEmpty(res.Item2)) MessageBox.Show(res.Item2);
+            await LoadCart();
         }
 
-        private void BtnPlusProd_Click(object sender, RoutedEventArgs e)
+        private async void BtnPlusProd_Click(object sender, RoutedEventArgs e)
         {
+            Button button = (Button)sender;
+            var item = (KorzinaProductDTO)button.DataContext;
+            if (item == null) return;
 
+            var res = await korzinaService.AddProduct(item.ProductDTO.ProductID);
+            if (!res.Item1 && !string.IsNullOrEmpty(res.Item2)) MessageBox.Show(res.Item2);
+            await LoadCart();
         }
 
-        private void BtnDeleteProd_Click(object sender, RoutedEventArgs e)
+        private async void BtnDeleteProd_Click(object sender, RoutedEventArgs e)
         {
+            Button button = (Button)sender;
+            var item = (KorzinaProductDTO)button.DataContext;
+            if (item == null) return;
 
+            var res = await korzinaService.RemoveProduct(item.ProductDTO.ProductID);
+            if (!res.Item1 && !string.IsNullOrEmpty(res.Item2)) MessageBox.Show(res.Item2);
+            await LoadCart();
         }
 
         private void BtnOrder_Click(object sender, RoutedEventArgs e)
         {
+            if (_items == null || _items.Count == 0)
+            {
+                MessageBox.Show("Корзина пуста");
+                return;
+            }
 
+            var order = new OrderDTO
+            {
+                TotalPrice = _items.Sum(i => i.Quantity * i.ProductDTO.Price),
+                Items = _items.Select(i => new OrderProductDTO
+                {
+                    ProductId = i.ProductDTO.ProductID,
+                    Name = i.ProductDTO.Name,
+                    Quantity = i.Quantity,
+                    PurchasePrice = i.ProductDTO.Price
+                }).ToList()
+            };
+            NavigationService.Navigate(new OrderPage(order, null));
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -65,9 +137,13 @@ namespace OnlineShopPR.Pages
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            var lstCarts = await korzinaService.allProductInCart();
-            TxtBlockCartQuantity.Text = lstCarts.Sum(k=>k.Quantity).ToString() ;
-            ListBoxProductsInCart.ItemsSource = lstCarts;
+            if (UserData.CurrentUser == null)
+            {
+                MessageBox.Show("Необходимо авторизоваться");
+                NavigationService.Navigate(new AuthPage());
+                return;
+            }
+            await LoadCart();
         }
     }
 }

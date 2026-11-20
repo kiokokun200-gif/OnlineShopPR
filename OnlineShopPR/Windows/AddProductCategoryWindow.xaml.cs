@@ -1,4 +1,6 @@
-﻿using System;
+using OnlineShop.Core.DTOs.DB;
+using OnlineShopPR.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,12 +21,14 @@ namespace OnlineShopPR.Windows
     /// </summary>
     public partial class AddProductCategoryWindow : Window
     {
+        AdminService adminService = new AdminService();
+
         public AddProductCategoryWindow()
         {
             InitializeComponent();
         }
 
-        private void BtnAdd_Click(object sender, RoutedEventArgs e)
+        private async void BtnAdd_Click(object sender, RoutedEventArgs e)
         {
             string name = TxtBoxName.Text;
             if (string.IsNullOrEmpty(name))
@@ -33,7 +37,17 @@ namespace OnlineShopPR.Windows
                 return;
             }
 
-            //создать категорию
+            var res = await adminService.SaveCategory(new CategorySaveRequest { Name = name });
+            if (res.Item1)
+            {
+                MessageBox.Show(string.IsNullOrEmpty(res.Item2) ? "Категория добавлена" : res.Item2);
+                DialogResult = true;
+                Close();
+            }
+            else
+            {
+                MessageBox.Show(string.IsNullOrEmpty(res.Item2) ? "Ошибка" : res.Item2);
+            }
         }
     }
 }

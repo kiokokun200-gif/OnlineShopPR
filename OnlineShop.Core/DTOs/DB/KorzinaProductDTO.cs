@@ -8,7 +8,7 @@ namespace OnlineShop.Core.DTOs.DB
 {
     public class KorzinaProductDTO
     {
-        public ProductDTO ProductDTO { get; set; }
+        public ProductDTO ProductDTO { get; set; } = new ProductDTO();
 
 
         public int Quantity { get; set; }

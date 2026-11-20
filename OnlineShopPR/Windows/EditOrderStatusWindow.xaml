@@ -20,7 +20,7 @@
 
         <TextBlock Text="Изменение статуса заказа" Grid.ColumnSpan="2" FontSize="25" FontWeight="Bold" Margin="0 0 0 10"/>
         <TextBlock Text="Статус" Grid.Column="0" Grid.Row="1" Margin="0 0 10 10"/>
-        <ComboBox x:Name="TxtBoxName" SelectedValue="{Binding StatusName}"  Grid.Row="1" Grid.Column="1" Width="300" Margin="0 5 0 10" HorizontalAlignment="Left"/>
+        <ComboBox x:Name="TxtBoxName"  Grid.Row="1" Grid.Column="1" Width="300" Margin="0 5 0 10" HorizontalAlignment="Left"/>
         <Button x:Name="BtnEdit" Content="Изменить" Width="200" Margin="10" Grid.ColumnSpan="2" Grid.Row="2" HorizontalAlignment="Left" Click="BtnEdit_Click"/>
 
     </Grid>

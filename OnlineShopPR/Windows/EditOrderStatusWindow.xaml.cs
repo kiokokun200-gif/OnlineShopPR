@@ -1,4 +1,5 @@
-﻿using OnlineShop.Core.DTOs.DB;
+using OnlineShop.Core.DTOs.DB;
+using OnlineShopPR.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,18 +21,46 @@ namespace OnlineShopPR.Windows
     /// </summary>
     public partial class EditOrderStatusWindow : Window
     {
-        //получить статусы заказа
         private OrderDTO _order;
+        AdminService adminService = new AdminService();
+        List<StatusDTO> _statuses = new List<StatusDTO>();
+
         public EditOrderStatusWindow(OrderDTO order)
         {
             InitializeComponent();
             _order = order;
             DataContext = order;
+            Loaded += EditOrderStatusWindow_Loaded;
         }
 
-        private void BtnEdit_Click(object sender, RoutedEventArgs e)
+        private async void EditOrderStatusWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            //изменить
+            _statuses = await adminService.GetStatuses();
+            TxtBoxName.ItemsSource = _statuses;
+            TxtBoxName.DisplayMemberPath = "Name";
+            TxtBoxName.SelectedValuePath = "Id";
+            TxtBoxName.SelectedValue = _order.StatusId;
+        }
+
+        private async void BtnEdit_Click(object sender, RoutedEventArgs e)
+        {
+            if (TxtBoxName.SelectedValue == null)
+            {
+                MessageBox.Show("Выберите статус");
+                return;
+            }
+            int statusId = (int)TxtBoxName.SelectedValue;
+            var res = await adminService.UpdateOrderStatus(new OrderStatusUpdateRequest { OrderId = _order.OrderID, StatusId = statusId });
+            if (res.Item1)
+            {
+                MessageBox.Show(string.IsNullOrEmpty(res.Item2) ? "Статус обновлен" : res.Item2);
+                DialogResult = true;
+                Close();
+            }
+            else
+            {
+                MessageBox.Show(string.IsNullOrEmpty(res.Item2) ? "Ошибка" : res.Item2);
+            }
         }
     }
 }

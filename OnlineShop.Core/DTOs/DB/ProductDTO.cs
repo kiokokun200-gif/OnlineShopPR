@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace OnlineShop.Core.DTOs.DB
@@ -11,28 +10,16 @@ namespace OnlineShop.Core.DTOs.DB
     {
         public int ProductID { get; set; }
 
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
 
-        public string Description { get; set; }
+        public string Description { get; set; } = "";
 
-        public string CategoriName { get; set; }
+        public string CategoriName { get; set; } = "";
+        public int? CategoriId { get; set; }
 
         public decimal Price { get; set; }
 
-        [JsonIgnore]
-        private string? _pathImg = "/images/products/default.png";
-        public string? PathImg
-        {
-            get
-            {
-                return _pathImg;
-            }
-            set
-            {
-                if (_pathImg != value || value != null)
-                    _pathImg = value;
-            }
-        } 
+        public string? PathImg { get; set; }
 
         public decimal? Rating { get; set; } = 0;
 

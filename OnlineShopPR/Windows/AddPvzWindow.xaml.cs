@@ -1,4 +1,6 @@
-﻿using System;
+using OnlineShop.Core.DTOs.DB;
+using OnlineShopPR.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,12 +21,14 @@ namespace OnlineShopPR.Windows
     /// </summary>
     public partial class AddPvzWindow : Window
     {
+        AdminService adminService = new AdminService();
+
         public AddPvzWindow()
         {
             InitializeComponent();
         }
 
-        private void BtnAdd_Click(object sender, RoutedEventArgs e)
+        private async void BtnAdd_Click(object sender, RoutedEventArgs e)
         {
             string name = TxtBoxName.Text;
             if (string.IsNullOrEmpty(name))
@@ -33,7 +37,17 @@ namespace OnlineShopPR.Windows
                 return;
             }
 
-            //создать пвз
+            var res = await adminService.SavePickupPoint(new PickupPointSaveRequest { AddressName = name });
+            if (res.Item1)
+            {
+                MessageBox.Show(string.IsNullOrEmpty(res.Item2) ? "ПВЗ добавлен" : res.Item2);
+                DialogResult = true;
+                Close();
+            }
+            else
+            {
+                MessageBox.Show(string.IsNullOrEmpty(res.Item2) ? "Ошибка" : res.Item2);
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using OnlineShop.Core.DTOs.DB;
+using OnlineShop.Core.DTOs.DB;
+using OnlineShopPR.Services;
 using OnlineShopPR.Windows;
 using System;
 using System.Collections.Generic;
@@ -23,14 +24,35 @@ namespace OnlineShopPR.Pages
     public partial class ProductPage : Page
     {
         private ProductDTO _product;
+        ReviewService reviewService = new ReviewService();
+        ProductService productService = new ProductService();
+
         public ProductPage(ProductDTO product)
         {
             InitializeComponent();
             _product = product;
-            DataContext = product;
+            DataContext = _product;
+            Loaded += ProductPage_Loaded;
         }
 
-        private void BtnAddReview_Click(object sender, RoutedEventArgs e)
+        private async void ProductPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            await LoadReviews();
+            var fresh = await productService.GetProduct(_product.ProductID);
+            if (fresh != null)
+            {
+                _product = fresh;
+                DataContext = _product;
+            }
+        }
+
+        private async Task LoadReviews()
+        {
+            var reviews = await reviewService.GetReviews(_product.ProductID);
+            ListReviews.ItemsSource = reviews;
+        }
+
+        private async void BtnAddReview_Click(object sender, RoutedEventArgs e)
         {
             if (UserData.CurrentUser == null)
             {
@@ -39,13 +61,17 @@ namespace OnlineShopPR.Pages
                 {
                     NavigationService.Navigate(new AuthPage());
                 }
-                else return;
+                return;
             }
 
-            else
+            var wind = new AddReviewWindow(_product.ProductID);
+            wind.ShowDialog();
+            await LoadReviews();
+            var fresh = await productService.GetProduct(_product.ProductID);
+            if (fresh != null)
             {
-                var wind = new AddReviewWindow();
-                wind.ShowDialog();
+                _product = fresh;
+                DataContext = _product;
             }
         }
 

@@ -32,14 +32,11 @@ namespace OnlineShop.API.Services
                 return ("Существует такой пользователь с таким логином", false);
             }
 
-            var roleUser = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "Пользователь" || r.Name == "User");
+            var roleUser = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "Клиент");
+            
             if (roleUser == null)
             {
-                roleUser = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "Клиент");
-            }
-            if (roleUser == null)
-            {
-                roleUser = new Role { Name = "Пользователь" };
+                roleUser = new Role { Name = "Клиент" };
                 _context.Roles.Add(roleUser);
                 await _context.SaveChangesAsync();
             }
@@ -71,7 +68,7 @@ namespace OnlineShop.API.Services
                 return ("Неправильный логин/пароль", null, null);
             }
 
-            string roleName = user.Role?.Name ?? "Пользователь";
+            string roleName = user.Role?.Name ?? "Клиент";
             var userLogin = new UserDTO
             {
                 UserId = user.UserId,

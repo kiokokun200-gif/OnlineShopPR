@@ -1,4 +1,5 @@
-﻿using OnlineShop.Core.DTOs.DB;
+using OnlineShop.Core.DTOs.DB;
+using OnlineShopPR.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,44 +23,98 @@ namespace OnlineShopPR.Pages
     public partial class OrderPage : Page
     {
         private OrderDTO _order;
-        //получить пвз
+        private int? _singleProductId;
+        OrderService orderService = new OrderService();
 
-        public OrderPage(OrderDTO order)
+        public OrderPage(OrderDTO order, int? singleProductId)
         {
             InitializeComponent();
             _order = order;
+            _singleProductId = singleProductId;
             DataContext = _order;
             LoadDate();
         }
 
-        private void LoadDate()
+        private async void LoadDate()
         {
-            if(20 < 600)
-            //if(_order.TotalPrice < 600)
-            {
-                TxtWarning.Visibility = Visibility.Visible;
-                RadioDelivery.IsEnabled = false;
+            var pvz = await orderService.GetPickupPoints();
+            CombpPVZ.ItemsSource = pvz;
+            CombpPVZ.DisplayMemberPath = "AddressName";
+            if (pvz.Count > 0) CombpPVZ.SelectedIndex = 0;
 
+            var grid = this.Content as Grid;
+            if (grid != null)
+            {
+                foreach (var c in grid.Children)
+                {
+                    if (c is ItemsControl ic && Grid.GetRow(ic) == 1)
+                    {
+                        ic.ItemsSource = _order.Items;
+                    }
+                }
             }
-            else
+
+            if (_order.TotalPrice > 600)
             {
                 TxtWarning.Visibility = Visibility.Collapsed;
                 RadioDelivery.IsEnabled = true;
-
+            }
+            else
+            {
+                TxtWarning.Visibility = Visibility.Visible;
+                RadioDelivery.IsEnabled = false;
+                RadioDelivery.IsChecked = false;
             }
             RefreshDeliveryPanels();
         }
 
-        private void BtnConfirm_Click(object sender, RoutedEventArgs e)
+        private async void BtnConfirm_Click(object sender, RoutedEventArgs e)
         {
+            bool isDelivery = RadioDelivery.IsChecked == true;
             string addressDelivery = TxtBoxDeliveryAddress.Text;
-            if (RadioDelivery.IsChecked == true && string.IsNullOrWhiteSpace(addressDelivery))
+
+            if (isDelivery && _order.TotalPrice <= 600)
+            {
+                MessageBox.Show("Доставка доступна только при сумме заказа больше 600 ₽");
+                return;
+            }
+
+            if (isDelivery && string.IsNullOrWhiteSpace(addressDelivery))
             {
                 MessageBox.Show("Введите адрес доставки");
                 return;
             }
-            //отправить заказ
-            MessageBox.Show("Заказ успешно оформлен!");
+
+            int? pickupPointId = null;
+            if (!isDelivery)
+            {
+                var sel = CombpPVZ.SelectedItem as PickupPointDTO;
+                if (sel == null)
+                {
+                    MessageBox.Show("Выберите ПВЗ");
+                    return;
+                }
+                pickupPointId = sel.Id;
+            }
+
+            var req = new CreateOrderRequest
+            {
+                ProductId = _singleProductId,
+                IsDelivery = isDelivery,
+                PickupPointId = pickupPointId,
+                AddressDelivery = isDelivery ? addressDelivery : null
+            };
+
+            var res = await orderService.CreateOrder(req);
+            if (res.Item1)
+            {
+                MessageBox.Show(string.IsNullOrEmpty(res.Item2) ? "Заказ успешно оформлен!" : res.Item2);
+                NavigationService.Navigate(new MainPage());
+            }
+            else
+            {
+                MessageBox.Show(string.IsNullOrEmpty(res.Item2) ? "Не удалось оформить заказ" : res.Item2);
+            }
         }
         private void RefreshDeliveryPanels()
         {

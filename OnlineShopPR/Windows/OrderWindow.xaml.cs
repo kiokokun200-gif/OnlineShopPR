@@ -1,4 +1,4 @@
-﻿using OnlineShop.Core.DTOs.DB;
+using OnlineShop.Core.DTOs.DB;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +26,7 @@ namespace OnlineShopPR.Windows
             InitializeComponent();
             _order = order;
             DataContext = order;
-            
+            ListOrderProducts.ItemsSource = order.Items;
         }
     }
 }

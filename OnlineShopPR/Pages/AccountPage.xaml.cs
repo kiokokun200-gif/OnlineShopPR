@@ -1,4 +1,4 @@
-﻿using OnlineShop.Core.DTOs.DB;
+using OnlineShop.Core.DTOs.DB;
 using OnlineShopPR.Services;
 using OnlineShopPR.Windows;
 using System;
@@ -23,11 +23,11 @@ namespace OnlineShopPR.Pages
     /// </summary>
     public partial class AccountPage : Page
     {
-        //private List<OrderDTO> _currentOrders;
-        //private List<OrderDTO> _historyOrders;
+        private List<OrderDTO> _allOrders = new List<OrderDTO>();
         private List<string> historySort;
-        ProductService productService = new ProductService();
-        KorzinaService korzinaService = new KorzinaService();
+        OrderService orderService = new OrderService();
+        FavoriteService favoriteService = new FavoriteService();
+
         public AccountPage()
         {
             InitializeComponent();
@@ -41,128 +41,111 @@ namespace OnlineShopPR.Pages
             ComboBoxSortHistory.SelectedIndex = 0;
         }
 
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (UserData.CurrentUser == null)
+            {
+                MessageBox.Show("Необходимо авторизоваться");
+                NavigationService.Navigate(new AuthPage());
+                return;
+            }
+
+            TxtBlockLogin.Text = UserData.CurrentUser.Login;
+            await LoadOrders();
+            await LoadFavorites();
+        }
+
+        private async Task LoadOrders()
+        {
+            string sort = "new";
+            if (ComboBoxSortHistory.SelectedItem != null && ComboBoxSortHistory.SelectedItem.ToString() == "Сначала старые")
+                sort = "old";
+
+            _allOrders = await orderService.GetMyOrders(sort);
+            var history = _allOrders.Where(o => o.StatusName == "Доставлен" || o.StatusName == "Отменён").ToList();
+            var current = _allOrders.Where(o => !(o.StatusName == "Доставлен" || o.StatusName == "Отменён")).ToList();
+
+            ListOrdersHistory.ItemsSource = history;
+            ListCurrentOrders.ItemsSource = current;
+        }
+
+        private async Task LoadFavorites()
+        {
+            var favs = await favoriteService.GetFavorites();
+            ListBoxGoods.ItemsSource = favs;
+        }
+
         private void BtnShowOrder_Click(object sender, RoutedEventArgs e)
         {
             Button btn = (Button)sender;
             var order = (OrderDTO)btn.DataContext;
+            if (order == null) return;
 
             var wind = new OrderWindow(order);
-            wind.Show();
+            wind.ShowDialog();
         }
 
         private void BtnShowOrderCurrent_Click(object sender, RoutedEventArgs e)
         {
             Button btn = (Button)sender;
             var order = (OrderDTO)btn.DataContext;
+            if (order == null) return;
 
             var wind = new OrderWindow(order);
-            wind.Show();
+            wind.ShowDialog();
         }
 
         private async void BtnFavorite_Click(object sender, RoutedEventArgs e)
         {
+            if (UserData.CurrentUser == null) return;
             Button btn = sender as Button;
             ProductDTO product = (ProductDTO)btn.DataContext;
-            bool res;
-            if (product != null)
+            if (product == null) return;
 
+            if (product.IsFavorite)
             {
-                if (!product.IsFavorite)
+                MessageBoxResult result = MessageBox.Show("Удалить из избранного?", "Подтверждение", MessageBoxButton.YesNo);
+                if (result == MessageBoxResult.Yes)
                 {
-                    res = await productService.AddFavorite(product.ProductID);
-
+                    var res = await favoriteService.RemoveFavorite(product.ProductID);
+                    if (res.Item1)
+                        await LoadFavorites();
+                    else
+                        MessageBox.Show(string.IsNullOrEmpty(res.Item2) ? "Ошибка" : res.Item2);
                 }
+            }
+            else
+            {
+                var res = await favoriteService.AddFavorite(product.ProductID);
+                if (res.Item1)
+                    await LoadFavorites();
                 else
-                {
-                    MessageBoxResult result = MessageBox.Show("Удалить из избранного?", "Подтверждение", MessageBoxButton.YesNo);
-                    if (result == MessageBoxResult.Yes)
-                    {
-                        res = await productService.RemoveFavorite(product.ProductID);
-                    }
-                    else return;
-                }
-
-                if (res)
-                {
-                    product.IsFavorite = !product.IsFavorite;
-                    ListBoxGoods.Items.Refresh();
-                }
-                else
-                {
-                    MessageBox.Show("Ошибка");
-                }
+                    MessageBox.Show(string.IsNullOrEmpty(res.Item2) ? "Ошибка" : res.Item2);
             }
         }
 
-        private async void BtnAddInCart_Click(object sender, RoutedEventArgs e)
+        private async void AddToCart_Click(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
             ProductDTO product = button.DataContext as ProductDTO;
+            if (product == null) return;
 
-            bool result = await korzinaService.AddProduct(product.ProductID);
-
-            if (result)
+            var res = await favoriteService.MoveToCart(product.ProductID);
+            if (res.Item1)
             {
-                //product.isInCart = true;
-                //product.quantityInCart = 1;
-
-                ListBoxGoods.Items.Refresh();
+                await LoadFavorites();
             }
-        }
-        private async void Minus_Click(object sender, RoutedEventArgs e)
-        {
-            Button button = sender as Button;
-            ProductDTO product = button.DataContext as ProductDTO;
-
-            bool result = await korzinaService.Remove(product.ProductID);
-
-            if (result)
+            else
             {
-                //product.quantityInCart--;
-
-                //if (product.quantityInCart <= 0)
-                //{
-                //    product.quantityInCart = 0;
-                //    product.isInCart = false;
-                //}
-
-                ListBoxGoods.Items.Refresh();
+                MessageBox.Show(string.IsNullOrEmpty(res.Item2) ? "Не удалось перенести товар в корзину" : res.Item2);
             }
         }
 
-        private async void Plus_Click(object sender, RoutedEventArgs e)
+        private async void ComboBoxSortHistory_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Button button = sender as Button;
-            ProductDTO product = button.DataContext as ProductDTO;
-
-            bool result = await korzinaService.AddProduct(product.ProductID);
-
-            if (result)
-            {
-                //product.quantityInCart++;
-                ListBoxGoods.Items.Refresh();
-            }
-
-        }
-
-        private void ComboBoxSortHistory_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (ComboBoxSortHistory.SelectedItem != null)
-            {
-                if(ComboBoxSortHistory.SelectedItem.ToString() == "Сначала новые")
-                {
-                    //сорт
-                }
-                else
-                {
-                    //
-                }
-            }
-        }
-
-        private void AddToCart_Click(object sender, RoutedEventArgs e)
-        {
-
+            if (!IsLoaded) return;
+            if (UserData.CurrentUser == null) return;
+            await LoadOrders();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

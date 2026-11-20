@@ -1,4 +1,6 @@
-﻿using System;
+using OnlineShop.Core.DTOs.DB;
+using OnlineShopPR.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,14 +21,17 @@ namespace OnlineShopPR.Windows
     /// </summary>
     public partial class EditProductCategoryWindow : Window
     {
-        //как то получить datacontext
-        public EditProductCategoryWindow()
+        AdminService adminService = new AdminService();
+        private CategoryDTO _cat;
+
+        public EditProductCategoryWindow(CategoryDTO cat)
         {
             InitializeComponent();
+            _cat = cat;
+            DataContext = _cat;
         }
 
-        
-        private void BtnEdit_Click(object sender, RoutedEventArgs e)
+        private async void BtnEdit_Click(object sender, RoutedEventArgs e)
         {
             string name = TxtBoxName.Text;
             if (string.IsNullOrEmpty(name))
@@ -34,7 +39,17 @@ namespace OnlineShopPR.Windows
                 MessageBox.Show("Введите название");
                 return;
             }
-            //изменить
+            var res = await adminService.SaveCategory(new CategorySaveRequest { CategoryID = _cat.CategoryID, Name = name });
+            if (res.Item1)
+            {
+                MessageBox.Show(string.IsNullOrEmpty(res.Item2) ? "Категория изменена" : res.Item2);
+                DialogResult = true;
+                Close();
+            }
+            else
+            {
+                MessageBox.Show(string.IsNullOrEmpty(res.Item2) ? "Ошибка" : res.Item2);
+            }
         }
     }
 }

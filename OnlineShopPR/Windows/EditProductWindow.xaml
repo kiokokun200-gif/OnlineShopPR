@@ -33,7 +33,7 @@
         <TextBox x:Name="TxtBoxDescription" Text="{Binding Description}" Grid.Column="1" Grid.Row="2"  Width="300" Margin="0 5 0 10" HorizontalAlignment="Left"/>
 
         <TextBlock Text="Категория" Grid.Column="0" Grid.Row="3" Margin="0 0 10 10"/>
-        <ComboBox x:Name="ComboCategory" Grid.Column="1" SelectedItem="{Binding CategoryName}"  Grid.Row="3"  Width="300" Margin="0 5 0 10" HorizontalAlignment="Left"/>
+        <ComboBox x:Name="ComboCategory" Grid.Column="1" Grid.Row="3"  Width="300" Margin="0 5 0 10" HorizontalAlignment="Left"/>
 
         <TextBlock Text="Цена" Grid.Column="0" Grid.Row="4" Margin="0 0 10 10"/>
         <TextBox x:Name="TxtBoxPrice" Text="{Binding Price}" Grid.Column="1" Grid.Row="4"  Width="300" Margin="0 5 0 10" HorizontalAlignment="Left"/>

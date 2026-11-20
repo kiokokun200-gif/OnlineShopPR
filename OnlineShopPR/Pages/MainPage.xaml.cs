@@ -1,4 +1,4 @@
-﻿using OnlineShop.Core.DTOs.DB;
+using OnlineShop.Core.DTOs.DB;
 using OnlineShopPR.Services;
 using System;
 using System.Collections.Generic;
@@ -24,13 +24,11 @@ namespace OnlineShopPR.Pages
     {
         ProductService productService = new ProductService();
         KorzinaService korzinaService = new KorzinaService();
+        FavoriteService favoriteService = new FavoriteService();
 
-        private List<ProductDTO> _products;
-        private List<string> sort = new List<string>();
-        private List<string> goodCategories;
-        private string search = "";
-        private string selectedSort;
-        private string selectefFiltr;
+        private List<ProductDTO> _products = new List<ProductDTO>();
+        private List<string> goodCategories = new List<string>();
+
         public MainPage()
         {
             InitializeComponent();
@@ -38,57 +36,82 @@ namespace OnlineShopPR.Pages
 
         private void BtnLogin_Click(object sender, RoutedEventArgs e)
         {
-            if(UserData.CurrentUser != null)
+            if (UserData.CurrentUser != null)
             {
-                NavigationService.Navigate(new AccountPage());
+                if (UserData.CurrentUser.RoleName == "Админ")
+                    NavigationService.Navigate(new AdminPage());
+                else
+                    NavigationService.Navigate(new AccountPage());
             }
-           else  NavigationService.Navigate(new AuthPage());
+            else NavigationService.Navigate(new AuthPage());
         }
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
             if (UserData.CurrentUser != null)
             {
-                BtnLogin.Content = "Аккаунт";
+                if (UserData.CurrentUser.RoleName == "Админ")
+                    BtnLogin.Content = "Админ";
+                else
+                    BtnLogin.Content = "Аккаунт";
             }
-
-            _products = await productService.GetAllProducts();
-            if (_products != null)
+            else
             {
-                goodCategories = _products.Select(p => p.CategoriName).Distinct().ToList();
-                goodCategories.Insert(0, "Все");
-                ComboBoxFiltr.ItemsSource = goodCategories;
-                ListBoxGoods.ItemsSource = _products.Where(p=> p.isActive && p.QuantityInStock > 0);
-                TxtBoxPriceOt.Text = ((int)_products.OrderBy(p => p.Price).First().Price).ToString();
-                TxtBoxPriceDo.Text = ((int)_products.OrderByDescending(p => p.Price).First().Price).ToString();
+                BtnLogin.Content = "Войти";
             }
 
+            await LoadProducts();
+        }
+
+        private async Task LoadProducts()
+        {
+            _products = await productService.GetAllProducts();
+            if (_products == null) _products = new List<ProductDTO>();
+
+            goodCategories = _products.Select(p => p.CategoriName).Where(x => !string.IsNullOrEmpty(x)).Distinct().ToList();
+            goodCategories.Insert(0, "Все");
+            ComboBoxFiltr.ItemsSource = goodCategories;
+            ComboBoxFiltr.SelectedIndex = 0;
+
+            var viewProducts = _products.Where(p => p.isActive && p.QuantityInStock > 0).ToList();
+            ListBoxGoods.ItemsSource = viewProducts;
+
+            if (viewProducts.Count > 0)
+            {
+                TxtBoxPriceOt.Text = ((int)Math.Floor(viewProducts.Min(p => p.Price))).ToString();
+                TxtBoxPriceDo.Text = ((int)Math.Ceiling(viewProducts.Max(p => p.Price))).ToString();
+            }
+            else
+            {
+                TxtBoxPriceOt.Text = "0";
+                TxtBoxPriceDo.Text = "0";
+            }
         }
 
         private void BtnFind_Click(object sender, RoutedEventArgs e)
         {
-            string search = TxtBoxSearch.Text;
-            string categ = ComboBoxFiltr.SelectedItem.ToString();
-            int priceDo = int.Parse(TxtBoxPriceDo.Text);
-            int priceOt = int.Parse(TxtBoxPriceOt.Text);
+            string search = TxtBoxSearch.Text ?? "";
+            string categ = ComboBoxFiltr.SelectedItem?.ToString() ?? "Все";
+            int.TryParse(TxtBoxPriceOt.Text, out int priceOt);
+            int.TryParse(TxtBoxPriceDo.Text, out int priceDo);
+            if (priceDo == 0 && priceOt == 0 && _products.Count > 0) priceDo = (int)Math.Ceiling(_products.Max(p => p.Price));
 
             Find(search, categ, priceOt, priceDo);
         }
 
         private void Find(string search, string categ, int priceOt, int priceDo)
         {
-            var prod = _products;
-            if(!string.IsNullOrEmpty(search))
+            var prod = _products.Where(p => p.isActive && p.QuantityInStock > 0).ToList();
+            if (!string.IsNullOrEmpty(search))
             {
-                prod = prod.Where(p => p.Name.ToLower().Contains(search.ToLower())).ToList();
+                prod = prod.Where(p => p.Name != null && p.Name.ToLower().Contains(search.ToLower())).ToList();
             }
-            if(categ != "Все")
+            if (categ != "Все" && !string.IsNullOrEmpty(categ))
             {
-                prod = prod.Where(p => p.CategoriName ==  categ).ToList();
+                prod = prod.Where(p => p.CategoriName == categ).ToList();
             }
             prod = prod.Where(p => p.Price >= priceOt && p.Price <= priceDo).ToList();
             ListBoxGoods.ItemsSource = prod;
-
         }
 
         private void TxtBoxPriceOt_PreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -98,49 +121,58 @@ namespace OnlineShopPR.Pages
 
         private async void BtnAddInCart_Click(object sender, RoutedEventArgs e)
         {
+            if (UserData.CurrentUser == null)
+            {
+                MessageBox.Show("Для добавления в корзину необходимо авторизоваться");
+                return;
+            }
             Button btn = sender as Button;
             ProductDTO product = (ProductDTO)btn.DataContext;
+            if (product == null) return;
 
-            bool result = await korzinaService.AddProduct(product.ProductID);
-
-            if (result)
+            var result = await korzinaService.AddProduct(product.ProductID);
+            if (result.Item1)
             {
-                product.isInCart = true;
-                product.quantityInCart += 1;
-
-                ListBoxGoods.Items.Refresh();
+                await LoadProducts();
+                BtnFind_Click(null, null);
+            }
+            else
+            {
+                MessageBox.Show(string.IsNullOrEmpty(result.Item2) ? "Не удалось добавить товар в корзину" : result.Item2);
             }
         }
 
         private async void BtnFavorite_Click(object sender, RoutedEventArgs e)
         {
+            if (UserData.CurrentUser == null)
+            {
+                MessageBox.Show("Для работы с избранным необходимо авторизоваться");
+                return;
+            }
             Button btn = sender as Button;
             ProductDTO product = (ProductDTO)btn.DataContext;
-            bool res;
-            if (product != null)
+            if (product == null) return;
 
+            if (product.IsFavorite)
             {
-                if (product.IsFavorite)
+                var res = await favoriteService.RemoveFavorite(product.ProductID);
+                if (res.Item1)
                 {
-                    res = await productService.AddFavorite(product.ProductID);
-
+                    await LoadProducts();
+                    BtnFind_Click(null, null);
                 }
-                else
-                {
-                    res = await productService.RemoveFavorite(product.ProductID);
-                }
-
-                if (res) { 
-                    product.IsFavorite = !product.IsFavorite;
-                    ListBoxGoods.Items.Refresh();
-                }
-                else
-                {
-                    MessageBox.Show("Ошибка");
-                }
+                else MessageBox.Show(res.Item2);
             }
-
-
+            else
+            {
+                var res = await favoriteService.AddFavorite(product.ProductID);
+                if (res.Item1)
+                {
+                    await LoadProducts();
+                    BtnFind_Click(null, null);
+                }
+                else MessageBox.Show(res.Item2);
+            }
         }
 
         private void ListBoxGoods_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -154,8 +186,12 @@ namespace OnlineShopPR.Pages
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            if (UserData.CurrentUser == null)
+            {
+                MessageBox.Show("Для просмотра корзины необходимо авторизоваться");
+                return;
+            }
             NavigationService.Navigate(new CartPage());
-
         }
     }
 }
