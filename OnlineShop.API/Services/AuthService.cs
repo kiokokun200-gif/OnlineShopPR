@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -7,7 +6,6 @@ using OnlineShop.API.Models;
 using OnlineShop.Core.DTOs.DB;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 
 namespace OnlineShop.API.Services
 {
@@ -16,64 +14,81 @@ namespace OnlineShop.API.Services
         private PasswordHasher<User> hasher = new PasswordHasher<User>();
 
         private JWTOption _jwt = new JWTOption();
-        private readonly OnlineShopContext onlineShopContext;
         public AuthService(IOptions<JWTOption> options, OnlineShopContext shopContext) : base(shopContext)
         {
             _jwt = options.Value;
-            onlineShopContext = shopContext;
-        }   
+        }
 
         public async Task<(string, bool)> RegisterAsync(string login, string password)
         {
-            var usr= await onlineShopContext.Users.FirstOrDefaultAsync(u=>u.Login == login);
-            if (usr!=null)
+            if (string.IsNullOrWhiteSpace(login) || string.IsNullOrWhiteSpace(password))
+            {
+                return ("Заполните логин и пароль", false);
+            }
+
+            var usr = await _context.Users.FirstOrDefaultAsync(u => u.Login == login);
+            if (usr != null)
             {
                 return ("Существует такой пользователь с таким логином", false);
+            }
+
+            var roleUser = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "Пользователь" || r.Name == "User");
+            if (roleUser == null)
+            {
+                roleUser = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "Клиент");
+            }
+            if (roleUser == null)
+            {
+                roleUser = new Role { Name = "Пользователь" };
+                _context.Roles.Add(roleUser);
+                await _context.SaveChangesAsync();
             }
 
             User newUser = new User
             {
                 Login = login,
-                RoleId=1
+                RoleId = roleUser.Id
             };
             newUser.PasswordHash = hasher.HashPassword(newUser, password);
 
-            await onlineShopContext.Users.AddAsync(newUser);
-            await onlineShopContext.SaveChangesAsync();
+            await _context.Users.AddAsync(newUser);
+            await _context.SaveChangesAsync();
             return ("Успешно!", true);
         }
         public async Task<(string, string?, UserDTO?)> LoginAsync(string login, string password)
         {
-            var rolsUser = onlineShopContext.Users.Include(u => u.Role);
+            var rolsUser = _context.Users.Include(u => u.Role);
             var user = await rolsUser.FirstOrDefaultAsync(u => u.Login == login);
             if (user == null)
             {
-                return ("Такого пользователя нет",null, null);
+                return ("Такого пользователя нет", null, null);
             }
 
             var result = hasher.VerifyHashedPassword(user, user.PasswordHash, password);
 
             if (result == PasswordVerificationResult.Failed)
             {
-                return ("Неправильный логин/пароль",null, null);
+                return ("Неправильный логин/пароль", null, null);
             }
+
+            string roleName = user.Role?.Name ?? "Пользователь";
             var userLogin = new UserDTO
             {
                 UserId = user.UserId,
-                Login = login,
-                RoleName = user.Role.Name,
+                Login = user.Login,
+                RoleName = roleName,
             };
             string token = CreateToken(userLogin);
-            return ("Успешно", token, userLogin );
+            return ("Успешно", token, userLogin);
         }
 
         string CreateToken(UserDTO account)
         {
             var claims = new[]
             {
-                new Claim("sub", account.UserId.ToString()),
-                new Claim("name", account.Login),
-                new Claim("role", account.RoleName)
+                new Claim(ClaimTypes.NameIdentifier, account.UserId.ToString()),
+                new Claim(ClaimTypes.Name, account.Login),
+                new Claim(ClaimTypes.Role, account.RoleName)
             };
 
             var token = new JwtSecurityToken(
