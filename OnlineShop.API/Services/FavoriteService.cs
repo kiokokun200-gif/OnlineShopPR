@@ -24,7 +24,7 @@ namespace OnlineShop.API.Services
                     CategoriId = p.CategoriId,
                     Price = p.Price,
                     PathImg = p.PathImg,
-                    Rating = p.Rating,
+                    Rating = _context.ReviewProducts.Where(r=>r.ProductId == p.ProductId).Sum(r=>r.Rating) /  Math.Max(1, _context.ReviewProducts.Count(r => r.ProductId == p.ProductId)),
                     QuantityInPack = p.QuantityInPack,
                     QuantityInStock = p.QuantityInStock,
                     isActive = p.IsActive,

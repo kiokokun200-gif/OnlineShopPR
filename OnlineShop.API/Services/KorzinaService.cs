@@ -51,7 +51,7 @@ namespace OnlineShop.API.Services
                     isActive = p.Product.IsActive,
                     IsFavorite = _context.FavoriteProducts.Any(f => f.UserId == userId && f.ProductId == p.ProductId),
                     Price = p.Product.Price,
-                    Rating = p.Product.Rating,
+                    Rating = _context.ReviewProducts.Where(r => r.ProductId == p.ProductId).Sum(r => r.Rating) / Math.Max(1, _context.ReviewProducts.Count(r => r.ProductId == p.ProductId)),
                     QuantityInPack = p.Product.QuantityInPack,
                     QuantityInStock = p.Product.QuantityInStock,
                     ReviewCount = p.Product.ReviewProducts.Count,
