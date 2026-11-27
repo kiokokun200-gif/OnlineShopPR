@@ -1,0 +1,78 @@
+﻿<Page x:Class="OnlineShopPR.Pages.CartPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:OnlineShopPR.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="CartPage" Loaded="Page_Loaded">
+
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+        <Button  HorizontalAlignment="Right" Grid.Column="1" Content="Назад" FontSize="22" FontWeight="Bold" VerticalAlignment="Top" Padding="10 0" Click="Button_Click"/>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <TextBlock Text="Корзина /" FontSize="40" FontWeight="Bold"/>
+            <TextBlock x:Name="TxtBlockCartQuantity" FontSize="35" Margin="5"/>
+        </StackPanel>
+        <TextBlock Grid.Row="1" x:Name="TxtBlockEmptyCart" Text="В корзине ничего нет..." 
+                       FontSize="24"  Margin="10"
+                       Visibility="Collapsed"/>
+
+        <ScrollViewer Grid.Row="2" Grid.ColumnSpan="2" >
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                    
+                </Grid.RowDefinitions>
+                <ListBox Grid.Row="0" x:Name="ListBoxProductsInCart" d:ItemsSource="{d:SampleData ItemCount=5}" HorizontalContentAlignment="Stretch">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Border BorderBrush="LightGray" BorderThickness="1" CornerRadius="5" Margin="5" Padding="10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Image Source="{Binding ProductDTO.PathImg}" Width="80" Height="80" Grid.Column="0"/>
+
+                                    <StackPanel Grid.Column="1" Margin="15,0">
+                                        <TextBlock Text="{Binding ProductDTO.Name}" FontSize="20" FontWeight="Bold"/>
+                                        <TextBlock Text="{Binding ProductDTO.Price, StringFormat={}{0:F2} ₽}" FontSize="16" Foreground="Gray"/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <Button x:Name="BtnMinusProd" Content="-" Width="30" Height="30" FontSize="20" Click="BtnMinusProd_Click"/>
+                                        <TextBlock Text="{Binding Quantity}" FontSize="20" Width="40" TextAlignment="Center"/>
+                                        <Button x:Name="BtnPlusProd" Content="+" Width="30" Height="30" FontSize="20" Click="BtnPlusProd_Click"/>
+                                        <Button x:Name="BtnDeleteProd" Content="🗑️" Width="40" Height="30" Margin="10,0,0,0" Click="BtnDeleteProd_Click"/>
+                                        <Button x:Name="BtnBuyProduct" Content="Купить" Margin="10,0,0,0" Click="BtnBuyProduct_Click"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <StackPanel x:Name="StackTotalPrice" Grid.Row="1" Orientation="Horizontal">
+                    <TextBlock Text="Итоговая цена:" FontSize="22" Margin="0 0 10 0"/>
+                    <TextBlock x:Name="TxtBlcTotalPrice" FontSize="30" FontWeight="Bold" Margin="0 0 0 20"/>
+                </StackPanel>
+                <Button x:Name="BtnOrder" Grid.Row="2" Width="200" Margin="20 0 0 0" Height="40" VerticalAlignment="Top" HorizontalAlignment="Left" Content="Оформить заказ" FontSize="22" Click="BtnOrder_Click"/>
+            </Grid>
+            
+        </ScrollViewer>
+    </Grid>
+</Page>
