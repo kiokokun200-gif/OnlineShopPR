@@ -20,7 +20,10 @@ namespace OnlineShopPR.Services
                 if (obj != null) return (obj.isOk, obj.message);
                 return (res.IsSuccessStatusCode, "");
             }
-            catch { return (false, "Ошибка запроса"); }
+            catch
+            {
+                return (false, "Ошибка запроса");
+            }
         }
 
         public async Task<(bool, string)> Remove(int prodId)
@@ -32,7 +35,10 @@ namespace OnlineShopPR.Services
                 if (obj != null) return (obj.isOk, obj.message);
                 return (res.IsSuccessStatusCode, "");
             }
-            catch { return (false, "Ошибка запроса"); }
+            catch
+            {
+                return (false, "Ошибка запроса");
+            }
         }
 
         public async Task<(bool, string)> RemoveProduct(int prodId)
@@ -44,17 +50,16 @@ namespace OnlineShopPR.Services
                 if (obj != null) return (obj.isOk, obj.message);
                 return (res.IsSuccessStatusCode, "");
             }
-            catch { return (false, "Ошибка запроса"); }
+            catch
+            {
+                return (false, "Ошибка запроса");
+            }
         }
 
         public async Task<List<KorzinaProductDTO>> allProductInCart()
         {
-            try
-            {
-                var res = await ApiService.Client.GetFromJsonAsync<List<KorzinaProductDTO>>("api/korzina/AllProducts");
-                return res ?? new List<KorzinaProductDTO>();
-            }
-            catch { return new List<KorzinaProductDTO>(); }
+            var res = await ApiService.Client.GetFromJsonAsync<List<KorzinaProductDTO>>("api/korzina/AllProducts");
+            return res ?? [];
         }
 
     }
