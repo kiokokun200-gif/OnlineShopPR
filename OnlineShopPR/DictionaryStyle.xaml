@@ -8,4 +8,8 @@
     <Style TargetType="TextBlock">
         <Setter Property="FontSize" Value="18"/>
     </Style>
+    <Style TargetType="ListBoxItem">
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
 </ResourceDictionary>

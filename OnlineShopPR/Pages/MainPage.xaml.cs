@@ -75,7 +75,7 @@ namespace OnlineShopPR.Pages
 
             var viewProducts = _products.Where(p => p.isActive && p.QuantityInStock > 0).ToList();
             ListBoxGoods.ItemsSource = viewProducts;
-
+            //ListBoxGoods.Items.Refresh();
             if (viewProducts.Count > 0)
             {
                 TxtBoxPriceOt.Text = ((int)Math.Floor(viewProducts.Min(p => p.Price))).ToString();

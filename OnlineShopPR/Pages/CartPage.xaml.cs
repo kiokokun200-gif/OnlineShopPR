@@ -82,7 +82,9 @@ namespace OnlineShopPR.Pages
             if (item == null) return;
 
             var res = await korzinaService.Remove(item.ProductDTO.ProductID);
-            if (!res.Item1 && !string.IsNullOrEmpty(res.Item2)) MessageBox.Show(res.Item2);
+            
+            if (!res.Item1 && !string.IsNullOrEmpty(res.Item2)) 
+                MessageBox.Show(res.Item2);
             await LoadCart();
         }
 
