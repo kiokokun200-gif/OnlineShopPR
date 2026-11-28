@@ -43,7 +43,7 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                             <DataGridTextColumn Header="Цена" Binding="{Binding Price}" />
-                            <DataGridTextColumn Header="Рейтинг" Binding="{Binding Rating}"/>
+                            <DataGridTextColumn Header="Рейтинг" Binding="{Binding Rating, StringFormat={}{0:0.#}}"/>
                             <DataGridTextColumn Header="Количество на складе" Binding="{Binding QuantityInStock}"/>
                             <DataGridTextColumn Header="Активен" Binding="{Binding isActive}"/>
                             <DataGridTemplateColumn Header="Действия">

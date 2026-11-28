@@ -11,11 +11,13 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
+        <Button  HorizontalAlignment="Left" Grid.Column="1" Content="Назад" FontSize="22" FontWeight="Bold" VerticalAlignment="Top" Padding="10 0" Click="Button_Click"/>
 
-        <StackPanel Grid.Row="0" Margin="10" >
+        <StackPanel Grid.Row="1" Margin="10" >
 
             <TextBlock  Text="Заказ" FontSize="30" FontWeight="Bold"  Margin="0 0 0 10"/>
             <TextBlock Text="Тип доставки: " Margin="0 0 0 10"/>
@@ -27,7 +29,7 @@
             <StackPanel x:Name="StackPVZ" Orientation="Horizontal">
                 
                 <TextBlock Text="Выберите ПВЗ:  "/>
-                <ComboBox x:Name="CombpPVZ" Width="300" SelectedIndex="0"/>
+                <ComboBox  x:Name="CombpPVZ" Width="300" SelectedIndex="0"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" x:Name="StackDelivery" Visibility="Collapsed">
@@ -35,7 +37,7 @@
                 <TextBox x:Name="TxtBoxDeliveryAddress" Width="300"/>
             </StackPanel>
         </StackPanel>
-        <ItemsControl Grid.Row="1" Margin="10">
+        <ItemsControl Grid.Row="2" Margin="10">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding FullDescription}"/>
@@ -43,7 +45,7 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <StackPanel Grid.Row="2" Margin="15">
+        <StackPanel Grid.Row="3" Margin="15">
             <TextBlock Text="{Binding TotalPrice, StringFormat=Итоговая цена: {0}}" FontSize="22" Margin="0 0 0 10"/>
             <Button x:Name="BtnConfirm"  Content="Подтвердить заказ" FontSize="22" Width="200" Height="40" HorizontalAlignment="Left"  Click="BtnConfirm_Click"/> 
             

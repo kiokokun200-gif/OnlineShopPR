@@ -134,5 +134,10 @@ namespace OnlineShopPR.Pages
             if (!IsLoaded) return;
             RefreshDeliveryPanels();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.GoBack();
+        }
     }
 }
